@@ -10,7 +10,7 @@ From Mayo Clinic: *"Obesity is a complex disease involving an excessive amount o
 ### Obesity is trending upwards
 ![obesity trend](obesity_prediction_v3.jpg)
 
-## Aim: Quantitative metric of obesity risk for a given population by periodic assessment of image-based BMI combined with streo measurements of anatomical features. 
+## Aim: Quantitative metric of obesity risk for a given population by periodic assessment of image-based BMI combined with stereo measurements of anatomical features. 
 
 Our goal is to provide accurate information to stake holders (school principal, school board, pediatricians and nutricionists) about whether the risk of obesity is increasing or decreasing in a given population by daily monitoring, in an anonimous and private way, the changes in risk level in order to allow decision makers to take action and evaluate past actions toward breaking the cycle of obesity.
 
