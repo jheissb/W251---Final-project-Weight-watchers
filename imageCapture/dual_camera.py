@@ -44,21 +44,6 @@ class STEREO_Camera:
         self.read_lock = threading.Lock()
         self.running = False
 
-
-    def open(self, gstreamer_pipeline_string):
-        try:
-            self.video_capture = cv2.VideoCapture(
-                gstreamer_pipeline_string, cv2.CAP_GSTREAMER
-            )
-            
-        except RuntimeError:
-            self.video_capture = None
-            print("Unable to open camera")
-            print("Pipeline: " + gstreamer_pipeline_string)
-            return
-        # Grab the first frame to start the video capturing
-        self.grabbed, self.frame = self.video_capture.read()
-
     def start(self):
         if self.running:
             print('Video capturing is already running')
@@ -69,6 +54,18 @@ class STEREO_Camera:
             self.read_thread = threading.Thread(target=self.updateCamera)
             self.read_thread.start()
         return self
+
+    def open(self, camera_index):
+        try:
+            self.video_capture = cv2.VideoCapture(camera_index)
+            
+        except RuntimeError:
+            self.video_capture = None
+            print("Unable to open camera")
+            return
+        # Grab the first frame to start the video capturing
+        self.grabbed, self.frame = self.video_capture.read()
+
 
     def stop(self):
         self.running=False
@@ -122,10 +119,14 @@ def init_mqtt_client():
 
 def start_cameras():
     left_camera = STEREO_Camera()
+
+    left_camera.open(0)
     
     left_camera.start()
 
     right_camera = STEREO_Camera()
+
+    right_camera.open(1)
     
     right_camera.start()
 
@@ -146,12 +147,12 @@ def start_cameras():
         _ , left_image=left_camera.read()
         _ , right_image=right_camera.read()
         camera_images = np.hstack((left_image, right_image))
-        _ ,png = cv2.imencode('.png', camera_images)
-        msg = png.tobytes()
-        mqtt_client.publish(msg)
-        print("Sent detected face to mosquitto")
+        # _ ,png = cv2.imencode('.png', camera_images)
+        # msg = png.tobytes()
+        # mqtt_client.publish(msg)
+        # print("Sent detected face to mosquitto")
 
-        cv2.imshow("STEREO Cameras", camera_images)
+        cv2.imshow("STEREO Cameras", right_image)
 
         # This also acts as
         keyCode = cv2.waitKey(30) & 0xFF
@@ -167,5 +168,5 @@ def start_cameras():
 
 
 if __name__ == "__main__":
-    init_mqtt_client()
+    # init_mqtt_client()
     start_cameras()
