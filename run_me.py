@@ -1,3 +1,8 @@
+## Please download test image files in the following folder and put them in an "input"  directory. Also please create an "output" directory.
+#  https://github.com/abhaymise/Face-to-height-weight-BMI-estimation-/tree/master/height_weight
+
+
+
 import face_recognition
 from PIL import Image
 import os
