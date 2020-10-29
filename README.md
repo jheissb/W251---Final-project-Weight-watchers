@@ -18,3 +18,5 @@ Our goal is to provide accurate information to stake holders (school principal, 
 
 ![obesity cycle](Childhood-Obesity-3.jpg)
 
+## Approach:
+A database manager running in the cloud or locally in the Nvidia Jetson NX reads images, identify new vs existing records and executes the obesity risk assesment program.
