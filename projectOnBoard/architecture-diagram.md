@@ -7,9 +7,8 @@ imagedetection/bodyextractor
 imagedetection/faceextractor
 ```
 {
-    firstName: "first name",
-    lastName: "last name",
-    id: "12345",
+    capturedTimestamp: "",
+    id: "12345" use code generated from face (hashing etc),
     imageBlob: "x011..."
 }
 ```
@@ -19,13 +18,12 @@ imagedetection/bodyprocessor
 imagedetection/faceprocessor
 ```
 {
-    firstName: "first name",
-    lastName: "last name",
-    id: "12345",
+    capturedTimestamp: "",
+    id: "12345" use code generated from face (hashing etc),
     imageBlob: "x011...",
     processedImageBlob: "...",
-    metadta: {},
-    metadta: {},
+    faceMetadta: {},
+    bodyMetadta: {},
     BMI: 21
 }
 ```
