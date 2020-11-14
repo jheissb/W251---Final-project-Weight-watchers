@@ -42,18 +42,21 @@ after get into the shell, start the mosquitto broker:
 
 #### Step 2 - Start processor with network
 ```sh
-docker run --name processor --network hw3 -ti imageprocessor sh
+docker run --name processor --network imgProcessor -ti imageprocessor sh
 ```
 after get into the shell:
 ```sh
-python3 forwarder.py
+python3 image_processor.py
 ```
 
 #### Step 3 - Start image capture with network
 ```sh
-xhost +
+#xhost +
 #docker run --name capture --network hw3 --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -ti imagecapture bash
-python3 single_cam.py
+#python3 single_cam.py
+
+docker run --name capture --network imgProcessor -ti imagecapture bash
+python3 detect_image.py --model=resnet --image /home/lindayang/Desktop/mids/W251---Final-project-Weight-watchers/imageCapture/image/people_2.jpg
 ```
 
 ## Image Data Saver
