@@ -8,9 +8,6 @@ Topic:
 QoS:   
 * Here, I choosed `at least once (1)`, I assume this is for business that does not worry about object duplication but want guarantee of delivery
 
-Sample Output Image:   
-* [S3://w251-hw3-bucket](https://s3.console.aws.amazon.com/s3/buckets/w251-hw3-bucket/?region=us-west-2&tab=overview)
-
 ## Image Processor
 There are 3 containers running on edge.  
 One container would consume image from our webcam  
