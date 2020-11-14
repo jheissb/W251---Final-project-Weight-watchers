@@ -12,6 +12,23 @@ from trt_pose.draw_objects import DrawObjects
 from trt_pose.parse_objects import ParseObjects
 import argparse
 import os.path
+import paho.mqtt.client as mqtt
+import os
+
+LOCAL_MQTT_HOST="172.18.0.2"
+LOCAL_MQTT_PORT=1883
+LOCAL_MQTT_TOPIC="imagedetection/extractor"
+
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code "+str(rc))
+    client.subscribe(LOCAL_MQTT_TOPIC)
+
+def publish(payload):
+    client.publish(LOCAL_MQTT_TOPIC, payload, qos=1, retain=False)
+
+client = mqtt.Client()
+client.on_connect = on_connect
+client.connect(LOCAL_MQTT_HOST, LOCAL_MQTT_PORT, 60)
 
 '''
 img is PIL format
@@ -144,7 +161,7 @@ def execute_2(img, org):
         print("Human index:%d "%( i ))
         kpoint = get_keypoint(objects, i, peaks)
         #print(kpoint)
-        org = draw_keypoints(org, kpoint)
+        # org = draw_keypoints(org, kpoint)
     print("Human count:%d len:%d "%(counts[0], len(counts)))
     print('===== Net FPS :%f ====='%( 1 / (end - start)))
     return org
@@ -212,10 +229,17 @@ draw_objects = DrawObjects(topology)
 for x in range(1):
     img = image.copy()
     #img = execute(img)
-    pilimg = execute_2(img, orgimg)
+    # pilimg = execute_2(img, orgimg)
     #cv2.imshow('key',img)
-dir, filename = os.path.split(args.image)
-name, ext = os.path.splitext(filename)
-pilimg.save('/home/lindayang/Desktop/mids/W251---Final-project-Weight-watchers/imageProcessor/%s_%s.png'%(args.model, name))
+    dir, filename = os.path.split(args.image)
+    name, ext = os.path.splitext(filename)
+    rc, imgbinary = cv2.imencode(ext, image)
+    msg = imgbinary.tobytes()
+    publish(msg)
+    print("Sent detected image to mosquitto")
+
+# dir, filename = os.path.split(args.image)
+# name, ext = os.path.splitext(filename)
+# pilimg.save('/home/lindayang/Desktop/mids/W251---Final-project-Weight-watchers/imageProcessor/%s_%s.png'%(args.model, name))
 
 
