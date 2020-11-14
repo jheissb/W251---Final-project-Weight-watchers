@@ -2,8 +2,12 @@
 wait watcher is using NVDIA Jeston Xavier, USB camera, opencv computer vision library, aws cloud service to detect face and human body through edge, and using machine learning model and and upload to remote through mosquitto, finally the image would get saved in s3 bucket. 
 
 Topic:  
-* for edge container communication: imagedetection/extractor  
-* for cloud container and edge to cloud communication: imagedetection/processor
+* for edge container communication: 
+  * imagedetection/bodyextractor  
+  * imagedetection/faceextractor
+* for cloud container and edge to cloud communication: 
+  * imagedetection/bodyprocessor
+  * imagedetection/faceprocessor
 
 QoS:   
 * Here, I choosed `at least once (1)`, I assume this is for business that does not worry about object duplication but want guarantee of delivery
@@ -23,6 +27,9 @@ docker build -t imageprocessorbroker -f Dockerfile .
 
 #in directory /imageprocessor
 docker build -t imageprocessor -f Dockerfile .
+
+#in directory /bmi_from_face
+docker build -t faceprocessor -f Dockerfile .
 ```
 ### Start Image Processor
 
@@ -41,12 +48,22 @@ after get into the shell, start the mosquitto broker:
 ```
 
 #### Step 2 - Start processor with network
+* for body
 ```sh
 docker run --name processor --network imgProcessor -ti imageprocessor sh
 ```
 after get into the shell:
 ```sh
 python3 image_processor.py
+```
+
+* for face
+```sh
+docker run --name faceprocessor --network imgProcessor -ti faceprocessor sh
+```
+after get into the shell:
+```sh
+pytho
 ```
 
 #### Step 3 - Start image capture with network

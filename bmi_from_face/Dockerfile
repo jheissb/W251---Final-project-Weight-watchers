@@ -1,0 +1,15 @@
+FROM ubuntu
+LABEL name="bmifromface"
+
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update
+RUN apt install -y python3-dev python3-pip  python3-opencv vim-tiny  libopencv-dev
+RUN pip3 install Cython
+RUN pip3 install numpy pandas glob3
+RUN pip3 install paho-mqtt
+RUN pip3 install sklearn
+RUN pip3 install scikit-learn
+RUN pip3 install face_recognition
+
+ADD src project
+ADD data projectdata 
