@@ -26,7 +26,7 @@ docker build -t imagecapture -f Dockerfile .
 docker build -t imageprocessorbroker -f Dockerfile .
 
 #in directory /imageprocessor
-docker build -t imageprocessor -f Dockerfile .
+docker build -t bodyprocessor -f Dockerfile .
 
 #in directory /bmi_from_face
 docker build -t faceprocessor -f Dockerfile .
