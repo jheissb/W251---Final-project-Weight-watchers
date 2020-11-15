@@ -1,5 +1,5 @@
 FROM ubuntu
-LABEL name="bmifromface"
+LABEL name="faceprocessor"
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update

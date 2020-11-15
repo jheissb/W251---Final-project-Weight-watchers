@@ -12,23 +12,23 @@ Topic:
 QoS:   
 * Here, I choosed `at least once (1)`, I assume this is for business that does not worry about object duplication but want guarantee of delivery
 
-## Image Processor
+## Image Capture & Processor
 There are 3 containers running on edge.  
 One container would consume image from our webcam  
 One container would be the mosquitto broker that control the topic and communication to and from client  
 One container would consume the image from webcam and process and send over to our cloud
 ### Build Docker Image
 ```sh
-#in directory /imageCapture
+#in directory /image_capture
 docker build -t imagecapture -f Dockerfile .
 
-#in directory /imageprocessorbroker
+#in directory /image_processor_broker
 docker build -t imageprocessorbroker -f Dockerfile .
 
-#in directory /imageprocessor
+#in directory /body_processor
 docker build -t bodyprocessor -f Dockerfile .
 
-#in directory /bmi_from_face
+#in directory /face_processor
 docker build -t faceprocessor -f Dockerfile .
 ```
 ### Start Image Processor
@@ -63,7 +63,7 @@ docker run --name faceprocessor --network imgProcessor -ti faceprocessor sh
 ```
 after get into the shell:
 ```sh
-pytho
+#python3 main.py
 ```
 
 #### Step 3 - Start image capture with network
@@ -76,7 +76,7 @@ docker run --name capture --network imgProcessor -ti imagecapture bash
 python3 detect_image.py --model=resnet --image /home/lindayang/Desktop/mids/W251---Final-project-Weight-watchers/imageCapture/image/people_2.jpg
 ```
 
-## Image Data Saver
+## Image Data Aggregator and Model Trainer
 There are 2 containers running on cloud.  
 One container would consume image message from our remote broker and store the image in our s3 bucket  
 One container would be the mosquitto broker that control the topic and communication to and from client  

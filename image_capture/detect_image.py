@@ -15,6 +15,8 @@ import os.path
 import paho.mqtt.client as mqtt
 import os
 
+#This file is for trt_pose to 
+
 LOCAL_MQTT_HOST="172.18.0.2"
 LOCAL_MQTT_PORT=1883
 LOCAL_MQTT_TOPIC="imagedetection/extractor"
