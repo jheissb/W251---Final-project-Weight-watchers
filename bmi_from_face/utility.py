@@ -1,5 +1,6 @@
-from sklearn.externals import joblib
+import joblib
 import face_recognition
+from pathlib import Path
 import numpy as np
 import os
 
@@ -28,6 +29,6 @@ def get_face_encoding(image_path):
 
 def get_index_of_digit(string):
     import re
-    match = re.search("\d", p(string).stem)
+    match = re.search("\d", Path(string).stem)
     return match.start(0)
 
