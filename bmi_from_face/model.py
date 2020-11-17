@@ -52,8 +52,8 @@ def train_bmi_model(X_train, y_bmi_train, X_test, y_bmi_test):
     return model_bmi
 
 
-def predict_bmi(test_image, model):
-    pred_array = np.expand_dims(np.array(get_face_encoding(test_image)),axis=0)
+def predict_bmi(prediction_image, model):
+    pred_array = np.expand_dims(np.array(get_face_encoding(prediction_image)),axis=0)
     img = np.exp(model.predict(pred_array))
     bmi = img.item()
     return {'bmi': bmi}
