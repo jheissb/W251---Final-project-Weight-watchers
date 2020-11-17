@@ -16,7 +16,7 @@
 import cv2
 import threading
 import numpy as np
-import face_validator
+import face_constructor
 import pose_detector
 import paho.mqtt.client as mqtt
 from datetime import datetime
@@ -203,25 +203,9 @@ def start_cameras():
     while cv2.getWindowProperty("CSI Cameras", 0) >= 0 :
         _ , left_image=left_camera.read()
         _ , right_image=right_camera.read()
-        camera_images = np.hstack((left_image, right_image))
-        #cv2.imshow("CSI Cameras", camera_images)
-        #saving:
-        #result.write(camera_images)
-        filename = 'training_set/'+d4+'train_img'+str(i)+'.png'
-        #filename ='maya'+str(i)+'.png'
-        # Using cv2.imwrite() method 
-        # Saving the image 
-        #output = np.clip(camera_images * 255, 0, 255) # proper [0..255] range
-        cv2.imshow("CSI Cameras", camera_images)
-        #output = output.astype('uint8')  # safe conversion
-        cv2.waitKey(0) & 0xFF
-        r=cv2.imwrite(filename,camera_images)
-        print(filename,'\n',r)
-        i+=1  
-        # This also acts as
-        keyCode = cv2.waitKey(30) & 0xFF
-        # Stop the program on the ESC key
-        if keyCode == 27:
+        face = face_constructor.face_main(left_image, right_image)
+        if face: 
+            publish(face)
             break
 
     left_camera.stop()
@@ -229,12 +213,6 @@ def start_cameras():
     right_camera.stop()
     right_camera.release()
     cv2.destroyAllWindows()
-
-def convert_to_binary():
-        image = cv2.imread(imagepath)
-        imagetype = '.' + imagepath.split('.')[-1]
-        rc, imgbinary = cv2.imencode(imagetype, image)
-        msg = imgbinary.tobytes()
 
 if __name__ == "__main__":
     start_cameras()

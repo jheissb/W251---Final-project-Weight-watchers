@@ -9,7 +9,7 @@ import face_image
 import uuid
 
 #face_processor/src/prediction_images
-def face_main():
+def face_main(left_image, right_image):
     left_image = face_recognition.load_image_file("face_processor/src/prediction_images")
     right_image = face_recognition.load_image_file("face_processor/src/prediction_images")
     related_id = uuid.uuid4()
@@ -27,10 +27,14 @@ def face_main():
                 matched_index = matched_face_indices[0]
                 left_face = cut_face(left_face_locations[i], left_image_encoding[i])
                 right_face = cut_face(right_face_locations[matched_index], right_image_encoding[matched_index])
-                return face_image.FaceImage(related_id, left_image, right_image, left_face, right_face)
+                return face_image.FaceImage(related_id, left_image_encoding[i], right_image_encoding[matched_index], left_face, right_face)
             else:
                 return None
 
 def cut_face(location, face_encoding):
     top, right, bottom, left = location
     return face_encoding[top:bottom, left:right]
+
+def convert_to_binary(imagetype, image):
+    rc, imgbinary = cv2.imencode(imagetype, image)
+    return imgbinary.tobytes()
