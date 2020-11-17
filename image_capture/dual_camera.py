@@ -16,7 +16,13 @@
 import cv2
 import threading
 import numpy as np
-
+import face_validator
+import pose_detector
+import paho.mqtt.client as mqtt
+from datetime import datetime
+# datetime object containing current date and time
+now = datetime.now()
+d4 = now.strftime("%d_%m_%H_%M_%S")
 # gstreamer_pipeline returns a GStreamer pipeline for capturing from the CSI camera
 # Flip the image by setting the flip_method (most common values: 0 and 2)
 # display_width and display_height determine the size of each camera pane in the window on the screen
@@ -24,6 +30,21 @@ import numpy as np
 left_camera = None
 right_camera = None
 
+
+LOCAL_MQTT_HOST="processorbroker"
+LOCAL_MQTT_PORT=1883
+LOCAL_MQTT_TOPIC="imagedetection/extractor"
+
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code "+str(rc))
+    client.subscribe(LOCAL_MQTT_TOPIC)
+
+def publish(payload):
+    client.publish(LOCAL_MQTT_TOPIC, payload, qos=1, retain=False)
+
+client = mqtt.Client()
+client.on_connect = on_connect
+client.connect(LOCAL_MQTT_HOST, LOCAL_MQTT_PORT, 60)
 
 class CSI_Camera:
 
@@ -107,7 +128,7 @@ def gstreamer_pipeline(
     capture_height=720,
     display_width=1280,
     display_height=720,
-    framerate=30,
+    framerate=15,
     flip_method=2,
 ):
     return (
@@ -139,8 +160,8 @@ def start_cameras():
             sensor_id=0,
             sensor_mode=3,
             flip_method=2,
-            display_height=540,
-            display_width=960,
+            display_height=720,
+            display_width=1280,
         )
     )
     left_camera.start()
@@ -151,8 +172,8 @@ def start_cameras():
             sensor_id=1,
             sensor_mode=3,
             flip_method=2,
-            display_height=540,
-            display_width=960,
+            display_height=720,
+            display_width=1280,
         )
     )
     right_camera.start()
@@ -168,14 +189,35 @@ def start_cameras():
         print("Unable to open any cameras")
         # TODO: Proper Cleanup
         SystemExit(0)
-
+    i=0	
+    #frame_width = int(2*960)
+    #frame_height = 540
+    #size = (frame_width, frame_height) 
+   
+    # Below VideoWriter object will create 
+    # a frame of above defined The output  
+    # is stored in 'filename.avi' file. 
+    #result = cv2.VideoWriter('stereo_test.avi',  
+    #                     cv2.VideoWriter_fourcc(*'MJPG'), 
+    #                     10, size) 
     while cv2.getWindowProperty("CSI Cameras", 0) >= 0 :
-        
         _ , left_image=left_camera.read()
         _ , right_image=right_camera.read()
         camera_images = np.hstack((left_image, right_image))
+        #cv2.imshow("CSI Cameras", camera_images)
+        #saving:
+        #result.write(camera_images)
+        filename = 'training_set/'+d4+'train_img'+str(i)+'.png'
+        #filename ='maya'+str(i)+'.png'
+        # Using cv2.imwrite() method 
+        # Saving the image 
+        #output = np.clip(camera_images * 255, 0, 255) # proper [0..255] range
         cv2.imshow("CSI Cameras", camera_images)
-
+        #output = output.astype('uint8')  # safe conversion
+        cv2.waitKey(0) & 0xFF
+        r=cv2.imwrite(filename,camera_images)
+        print(filename,'\n',r)
+        i+=1  
         # This also acts as
         keyCode = cv2.waitKey(30) & 0xFF
         # Stop the program on the ESC key
@@ -188,6 +230,11 @@ def start_cameras():
     right_camera.release()
     cv2.destroyAllWindows()
 
+def convert_to_binary():
+        image = cv2.imread(imagepath)
+        imagetype = '.' + imagepath.split('.')[-1]
+        rc, imgbinary = cv2.imencode(imagetype, image)
+        msg = imgbinary.tobytes()
 
 if __name__ == "__main__":
     start_cameras()
