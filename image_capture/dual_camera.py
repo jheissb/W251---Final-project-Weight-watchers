@@ -34,14 +34,20 @@ right_camera = None
 
 LOCAL_MQTT_HOST="processorbroker"
 LOCAL_MQTT_PORT=1883
-LOCAL_MQTT_TOPIC="imagedetection/extractor"
+LOCAL_FACE_MQTT_TOPIC="imagedetection/faceextractor"
+LOCAL_BODY_MQTT_TOPIC="imagedetection/bodyextractor"
+
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
-    client.subscribe(LOCAL_MQTT_TOPIC)
+    client.subscribe(LOCAL_FACE_MQTT_TOPIC)
+    client.subscribe(LOCAL_BODY_MQTT_TOPIC)
 
-def publish(payload):
-    client.publish(LOCAL_MQTT_TOPIC, payload, qos=1, retain=False)
+def publish_face(payload):
+    client.publish(LOCAL_FACE_MQTT_TOPIC, payload, qos=1, retain=False)
+
+def publish_body(payload):
+    client.publish(LOCAL_BODY_MQTT_TOPIC, payload, qos=1, retain=False)
 
 client = mqtt.Client()
 client.on_connect = on_connect
@@ -205,12 +211,12 @@ def start_cameras():
         _ , left_image=left_camera.read()
         _ , right_image=right_camera.read()
         face = face_constructor.face_main(left_image, right_image)
-        body = body_constructor(left_image, right_image)
+        body = body_constructor.body_main(left_image, right_image)
         if face: 
-            publish(face)
+            publish_face(face)
             break
-        else if body:
-            publish(body)
+        elif body:
+            publish_body(body)
 
     left_camera.stop()
     left_camera.release()
