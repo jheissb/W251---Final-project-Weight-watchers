@@ -12,25 +12,9 @@ from trt_pose.draw_objects import DrawObjects
 from trt_pose.parse_objects import ParseObjects
 import argparse
 import os.path
-import paho.mqtt.client as mqtt
 import os
 
 #This file is for trt_pose to 
-
-LOCAL_MQTT_HOST="172.18.0.2"
-LOCAL_MQTT_PORT=1883
-LOCAL_MQTT_TOPIC="imagedetection/extractor"
-
-def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
-    client.subscribe(LOCAL_MQTT_TOPIC)
-
-def publish(payload):
-    client.publish(LOCAL_MQTT_TOPIC, payload, qos=1, retain=False)
-
-client = mqtt.Client()
-client.on_connect = on_connect
-client.connect(LOCAL_MQTT_HOST, LOCAL_MQTT_PORT, 60)
 
 '''
 img is PIL format
@@ -159,14 +143,16 @@ def execute_2(img, org):
     cmap, paf = cmap.detach().cpu(), paf.detach().cpu()
     end = time.time()
     counts, objects, peaks = parse_objects(cmap, paf)#, cmap_threshold=0.15, link_threshold=0.15)
+    keypoints =[]
     for i in range(counts[0]):
         print("Human index:%d "%( i ))
         kpoint = get_keypoint(objects, i, peaks)
-        #print(kpoint)
-        # org = draw_keypoints(org, kpoint)
+        print(kpoint)
+        org = draw_keypoints(org, kpoint)
+        keypoints.append(kpoint)
     print("Human count:%d len:%d "%(counts[0], len(counts)))
     print('===== Net FPS :%f ====='%( 1 / (end - start)))
-    return org
+    return (org,keypoints)
 
 
 parser = argparse.ArgumentParser(description='TensorRT pose estimation run')
@@ -219,26 +205,21 @@ print(50.0 / (t1 - t0))
 mean = torch.Tensor([0.485, 0.456, 0.406]).cuda()
 std = torch.Tensor([0.229, 0.224, 0.225]).cuda()
 device = torch.device('cuda')
-
-src = cv2.imread(args.image, cv2.IMREAD_COLOR)
-pilimg = cv2.cvtColor(src, cv2.COLOR_BGR2RGB)
-pilimg = PIL.Image.fromarray(pilimg)
-orgimg = pilimg.copy()
-
-image = cv2.resize(src, dsize=(WIDTH, HEIGHT), interpolation=cv2.INTER_AREA)
 parse_objects = ParseObjects(topology)
 draw_objects = DrawObjects(topology)
-for x in range(1):
+
+def detect_pose(img):
+    src = cv2.imread(img, cv2.IMREAD_COLOR)
+    pilimg = cv2.cvtColor(src, cv2.COLOR_BGR2RGB)
+    pilimg = PIL.Image.fromarray(pilimg)
+    orgimg = pilimg.copy()
+
+    image = cv2.resize(src, dsize=(WIDTH, HEIGHT), interpolation=cv2.INTER_AREA)
+
     img = image.copy()
     #img = execute(img)
-    # pilimg = execute_2(img, orgimg)
-    #cv2.imshow('key',img)
-    dir, filename = os.path.split(args.image)
-    name, ext = os.path.splitext(filename)
-    rc, imgbinary = cv2.imencode(ext, image)
-    msg = imgbinary.tobytes()
-    publish(msg)
-    print("Sent detected image to mosquitto")
+    pilimg, keypoints = execute_2(img, orgimg)
+    return (pilimg, keypoints)
 
 # dir, filename = os.path.split(args.image)
 # name, ext = os.path.splitext(filename)

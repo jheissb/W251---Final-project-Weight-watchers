@@ -7,5 +7,4 @@ class FaceImage(object):
         self.left_face = left_face
         self.right_face = right_face
         self.image_id = uuid.uuid4()
-        self.related_id = related_id
         #need to add timestamp

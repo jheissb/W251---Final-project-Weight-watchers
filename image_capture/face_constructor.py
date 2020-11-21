@@ -34,7 +34,3 @@ def face_main(left_image, right_image):
 def cut_face(location, face_encoding):
     top, right, bottom, left = location
     return face_encoding[top:bottom, left:right]
-
-def convert_to_binary(imagetype, image):
-    rc, imgbinary = cv2.imencode(imagetype, image)
-    return imgbinary.tobytes()

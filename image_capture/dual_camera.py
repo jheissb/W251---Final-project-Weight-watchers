@@ -17,9 +17,10 @@ import cv2
 import threading
 import numpy as np
 import face_constructor
-import pose_detector
+import body_constructor
 import paho.mqtt.client as mqtt
 from datetime import datetime
+
 # datetime object containing current date and time
 now = datetime.now()
 d4 = now.strftime("%d_%m_%H_%M_%S")
@@ -204,9 +205,12 @@ def start_cameras():
         _ , left_image=left_camera.read()
         _ , right_image=right_camera.read()
         face = face_constructor.face_main(left_image, right_image)
+        body = body_constructor(left_image, right_image)
         if face: 
             publish(face)
             break
+        else if body:
+            publish(body)
 
     left_camera.stop()
     left_camera.release()
