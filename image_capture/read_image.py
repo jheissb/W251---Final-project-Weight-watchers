@@ -42,7 +42,7 @@ def main():
         exit
     face = face_constructor.face_main(face_image)
     if face: 
-        face_str = face.serializer
+        face_str = face.serializer()
         print(face_str)
         publish_face(face_str)
         print("Sent detected face image to mosquitto")
