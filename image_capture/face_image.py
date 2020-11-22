@@ -10,7 +10,7 @@ class FaceImage(object):
         self.left_face = left_face
         self.right_face = right_face
         self.image_id = uuid.uuid4().__str__
-        self.timestamp = datetime.now()
+        self.timestamp = datetime.now().__str__
         #need to add timestamp
     
     def serializer(self):
