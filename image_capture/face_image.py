@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime
+import json
 
 class FaceImage(object):
     def __init__(self, raw_left_img, raw_right_img, left_face, right_face):
@@ -10,3 +11,10 @@ class FaceImage(object):
         self.image_id = uuid.uuid4()
         self.timestamp = datetime.now()
         #need to add timestamp
+    
+    def serializer(self):
+        jsonStr = json.dumps(self.__dict__)
+        return jsonStr
+
+    def deserializer(self):
+        return None
