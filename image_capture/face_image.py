@@ -9,7 +9,7 @@ class FaceImage(object):
         self.raw_right_img = raw_right_img
         self.left_face = left_face
         self.right_face = right_face
-        self.image_id = uuid.uuid4()
+        self.image_id = uuid.uuid4().__str__
         self.timestamp = datetime.now()
         #need to add timestamp
     
