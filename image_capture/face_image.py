@@ -13,6 +13,7 @@ class FaceImage(object):
         #need to add timestamp
     
     def serializer(self):
+        print("get called")
         jsonStr = json.dumps(self.__dict__)
         return jsonStr
 
