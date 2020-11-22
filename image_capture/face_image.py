@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 import json
+import numpy_encoder.NumpyEncoder
 
 class FaceImage(object):
     def __init__(self, raw_left_img, raw_right_img, left_face, right_face):
@@ -14,7 +15,7 @@ class FaceImage(object):
     
     def serializer(self):
         print("get called")
-        jsonStr = json.dumps(self.__dict__)
+        jsonStr = json.dumps(self.__dict__, cls=NumpyEncoder)
         return jsonStr
 
     def deserializer(self):
