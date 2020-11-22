@@ -3,6 +3,7 @@ import paho.mqtt.client as mqtt
 import os
 import face_constructor
 import body_constructor
+import face_recognition
 
 LOCAL_MQTT_HOST="172.18.0.2"
 LOCAL_MQTT_PORT=1883
@@ -34,7 +35,8 @@ def main():
     face_image_path = input("Face image path: ")
     face_image = None
     try: 
-        face_image = cv2.imread(face_image_path)
+        # face_image = cv2.imread(face_image_path)
+        face_image = face_recognition.load_image_file(face_image_path)
     except RuntimeError:
         print("Could not open the image")
         exit
