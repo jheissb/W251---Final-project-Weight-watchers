@@ -40,7 +40,5 @@ def face_main(left_image, right_image=None):
             return None
 
 def cut_face(location, face_encoding):
-    print(location)
-    print(face_encoding)
     top, right, bottom, left = location
     return face_encoding[top:bottom, left:right]
