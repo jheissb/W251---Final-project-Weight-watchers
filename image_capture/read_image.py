@@ -4,7 +4,7 @@ import os
 import face_constructor
 import body_constructor
 
-LOCAL_MQTT_HOST="processorbroker"
+LOCAL_MQTT_HOST="172.18.0.2"
 LOCAL_MQTT_PORT=1883
 LOCAL_FACE_MQTT_TOPIC="imagedetection/faceextractor"
 LOCAL_BODY_MQTT_TOPIC="imagedetection/bodyextractor"

@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 import time
 import os
+from datetime import datetime
+import uuid
+import paho.mqtt.client as mqtt
 
 from glob import glob
 from pathlib import Path
@@ -11,19 +14,39 @@ import config
 from utility import get_index_of_digit, get_face_encoding, save_model, load_model
 from model import train_test_splits, train_bmi_model, predict_bmi
 
+LOCAL_MQTT_HOST="imageProcessor" 
+LOCAL_MQTT_PORT=1883
+LOCAL_MQTT_TOPIC="imagedetection/faceextractor"
+
+def on_connect(client, userdata, flags, rc):
+        print("connected to  broker with rc: " + str(rc))
+        client.subscribe(LOCAL_MQTT_TOPIC)
+
+def on_message(client,userdata, msg):
+    print("message received!")	
+    print(msg)
+    print(type(msg))
+    #process_face_image(msg)
+
+
+mqttclient = mqtt.Client()
+mqttclient.on_connect = on_connect
+mqttclient.connect(LOCAL_MQTT_HOST, LOCAL_MQTT_PORT, 60)
+mqttclient.on_message = on_message
+
 parser = argparse.ArgumentParser(description='BMI from face')
 parser.add_argument('--mode', type=str, default='prediction', help = 'prediction or training' )
-args = parser.parse_args()
+args = parser.parse_args()    
 
-def main():
+def process_face_image(msg):
     if 'prediction' in args.mode:
         print("loading trained bmi model...")
         time.sleep(2)
         model = load_model(config.OUTPUT_MODEL_DIR, config.OUTPUT_MODEL_NAME)
         print("running prediction...")
         time.sleep(2)
-        bmi_dict = predict_bmi(config.PREDICTION_IMG_PATH, model)
-        print(bmi_dict)
+        bmi_dict = predict_bmi(msg, model)
+        setattr(msg, "bmi", bmi_dict)
     else:
         print("training model...")
         profile_df = pd.read_csv(config.IMGS_INFO_FILE)
@@ -64,6 +87,5 @@ def main():
         print("saving trained model...")
         save_model(bmi_model, config.OUTPUT_MODEL_DIR, config.OUTPUT_MODEL_NAME)
 
-
-if __name__ == "__main__":
-    main()
+# go into a loop
+mqttclient.loop_forever()

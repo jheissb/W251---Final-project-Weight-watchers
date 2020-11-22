@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
-from utility import get_face_encoding
+from utility import get_face_encoding_from_message
 
 
 def model_eval(model, X_test, y_test, predictor_log=True):
@@ -53,7 +53,7 @@ def train_bmi_model(X_train, y_bmi_train, X_test, y_bmi_test):
 
 
 def predict_bmi(prediction_image, model):
-    pred_array = np.expand_dims(np.array(get_face_encoding(prediction_image)),axis=0)
+    pred_array = np.expand_dims(np.array(get_face_encoding_from_message(prediction_image)),axis=0)
     img = np.exp(model.predict(pred_array))
     bmi = img.item()
     return {'bmi': bmi}

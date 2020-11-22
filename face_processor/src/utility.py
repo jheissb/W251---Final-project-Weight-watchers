@@ -26,6 +26,15 @@ def get_face_encoding(image_path):
         return np.zeros(128).tolist()
     return my_face_encoding[0].tolist()
 
+def get_face_encoding_from_message(msg):
+    print(msg)
+    my_face_encoding = face_recognition.face_encodings(msg['left_face'])
+    if not my_face_encoding:
+        print("no face found !!!")
+        return np.zeros(128).tolist()
+    return my_face_encoding[0].tolist()
+
+
 
 def get_index_of_digit(string):
     import re
