@@ -25,16 +25,16 @@ def face_main(left_image, right_image=None):
                 matched_face_indices = [i for i, x in enumerate(matches) if x]
                 if len(matched_face_indices) == 1: 
                     matched_index = matched_face_indices[0]
-                    left_face = cut_face(left_face_locations[i], left_image_encoding[i])
-                    right_face = cut_face(right_face_locations[matched_index], right_image_encoding[matched_index])
+                    left_face = cut_face(left_face_locations[i], left_image)
+                    right_face = cut_face(right_face_locations[matched_index], right_image)
                     return face_image.FaceImage(left_image_encoding[i], right_image_encoding[matched_index], left_face, right_face)
                 else:
                     #multi faces, we only need one matched face
                     return None
     else:
         if left_image_encoding and len(left_image_encoding) == 1:
-            left_face = cut_face(left_face_locations[0], left_image_encoding[0])
-            return face_image.FaceImage(left_image_encoding[i], None, left_face, None)
+            left_face = cut_face(left_face_locations[0], left_image)
+            return face_image.FaceImage(left_image_encoding[0], None, left_face, None)
         else:
             #multi faces, we only need one matched face
             return None
