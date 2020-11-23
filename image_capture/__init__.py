@@ -1,0 +1,2 @@
+from data_objects import face_image
+from data_objects import face_serde
