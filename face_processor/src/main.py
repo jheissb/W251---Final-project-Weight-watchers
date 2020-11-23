@@ -47,8 +47,10 @@ def process_face_image(face_img):
         print("running prediction...")
         time.sleep(2)
         bmi_dict = predict_bmi(face_img, model)
-        face_img.bmi = bmi_dict
+        print("type")
+        print(type(face_img))
         print(face_img.bmi)
+        # face_img.bmi = bmi_dict
     else:
         print("training model...")
         profile_df = pd.read_csv(config.IMGS_INFO_FILE)
