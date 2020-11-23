@@ -50,6 +50,7 @@ def main():
             print(face.image_id)
             face_str = face.serializer()
             publish_face(face_str)
+            print(face.raw_left_img)
             print("Sent detected face image to mosquitto")
 
     #Test body
