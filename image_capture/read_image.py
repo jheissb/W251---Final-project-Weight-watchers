@@ -4,7 +4,7 @@ import os
 import face_constructor
 import body_constructor
 import face_recognition
-from data_objects import face_image
+import face_image
 
 
 LOCAL_MQTT_HOST="172.18.0.2"

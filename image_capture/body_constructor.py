@@ -1,6 +1,6 @@
 import pose_detector
 import cv2
-from data_objects import body_image
+import body_image
 
 
 def body_main(left_image, right_image=None):

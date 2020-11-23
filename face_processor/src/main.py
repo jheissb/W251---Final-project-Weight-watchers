@@ -8,7 +8,7 @@ import paho.mqtt.client as mqtt
 
 from glob import glob
 from pathlib import Path
-from data_objects import face_serde
+import face_serde
 
 import argparse
 import config
