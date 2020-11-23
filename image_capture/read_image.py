@@ -35,8 +35,9 @@ def main():
     face_image_path = input("Face image path: ")
     face_image = None
     try: 
-        # face_image = cv2.imread(face_image_path)
-        face_image = face_recognition.load_image_file(face_image_path)
+        img = cv2.imread(face_image_path)
+        face_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        # face_image = face_recognition.load_image_file(face_image_path)
     except RuntimeError:
         print("Could not open the image")
         exit

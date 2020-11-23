@@ -22,7 +22,7 @@ def on_connect(client, userdata, flags, rc):
         print("connected to  broker with rc: " + str(rc))
         client.subscribe(LOCAL_MQTT_TOPIC)
 
-def on_message(client,userdata, msg):
+def  (client,userdata, msg):
     print("message received!")	
     print(msg)
     print(type(msg))
