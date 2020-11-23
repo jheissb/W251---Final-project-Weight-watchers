@@ -26,11 +26,8 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client,userdata, msg):
     print("message received!")	
     print(str(msg.payload))
-    try:
-        face_img = face_image.deserializer(str(msg.payload))
-        process_face_image(face_img.left_image)
-    except Exception as e:
-        print(str(e))
+    face_img = face_image.deserializer(str(msg.payload))
+    process_face_image(face_img.left_image)
 
 
 mqttclient = mqtt.Client()
