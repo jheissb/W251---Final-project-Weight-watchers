@@ -27,7 +27,7 @@ def on_message(client,userdata, msg):
     print("message received!")	
     img_payload = msg.payload.decode("utf-8") 
     face_img = face_image.deserializer(img_payload)
-    process_face_image(face_img.left_face)
+    process_face_image(face_img)
 
 
 mqttclient = mqtt.Client()
@@ -39,15 +39,15 @@ parser = argparse.ArgumentParser(description='BMI from face')
 parser.add_argument('--mode', type=str, default='prediction', help = 'prediction or training' )
 args = parser.parse_args()    
 
-def process_face_image(msg):
+def process_face_image(face_img):
     if 'prediction' in args.mode:
         print("loading trained bmi model...")
         time.sleep(2)
         model = load_model(config.OUTPUT_MODEL_DIR, config.OUTPUT_MODEL_NAME)
         print("running prediction...")
         time.sleep(2)
-        bmi_dict = predict_bmi(msg, model)
-        setattr(msg, "bmi", bmi_dict)
+        bmi_dict = predict_bmi(face_img, model)
+        setattr(face_img, "bmi", bmi_dict)
     else:
         print("training model...")
         profile_df = pd.read_csv(config.IMGS_INFO_FILE)
