@@ -41,6 +41,7 @@ def main():
         try: 
             img = cv2.imread(face_image_path)
             face_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            print(face_image)
             # face_image = face_recognition.load_image_file(face_image_path)
         except RuntimeError:
             print("Could not open the image")
@@ -50,7 +51,6 @@ def main():
             print(face.image_id)
             face_str = face.serializer()
             publish_face(face_str)
-            print(face.raw_left_img)
             print("Sent detected face image to mosquitto")
 
     #Test body
