@@ -34,7 +34,7 @@ def face_main(left_image, right_image=None):
     else:
         if left_image_encoding and len(left_image_encoding) == 1:
             left_face = cut_face(left_face_locations[0], left_image)
-            return face_image.FaceImage(left_image_encoding[0], None, left_face, None)
+            return face_image.FaceImage(left_image, None, left_face, None)
         else:
             #multi faces, we only need one matched face
             return None
