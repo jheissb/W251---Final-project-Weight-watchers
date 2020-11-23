@@ -1,6 +1,7 @@
 import pose_detector
 import cv2
-import body_image
+from data_objects import body_image
+
 
 def body_main(left_image, right_image=None):
     if right_image:
@@ -39,5 +40,5 @@ def vaidate_keypoint(kpoints):
     return len(validat_indices) > 14
 
 def convert_to_binary(image):
-    rc, imgbinary = cv2.imencode(IMAGE_TYPE, image)
+    _, imgbinary = cv2.imencode('png', image)
     return imgbinary.tobytes()

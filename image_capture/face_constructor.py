@@ -5,7 +5,7 @@ import face_recognition
 import numpy as np
 import os
 import glob
-import face_image
+from data_objects import face_image
 import uuid
 
 #face_processor/src/prediction_images

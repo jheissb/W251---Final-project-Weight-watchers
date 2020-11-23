@@ -8,6 +8,7 @@ import paho.mqtt.client as mqtt
 
 from glob import glob
 from pathlib import Path
+from data_objects import face_serde
 
 import argparse
 import config
@@ -26,7 +27,8 @@ def on_message(client,userdata, msg):
     print("message received!")	
     print(msg)
     print(type(msg))
-    #process_face_image(msg)
+    face_image = face_serde.faceDecoder(msg)
+    process_face_image(face_image.left_image)
 
 
 mqttclient = mqtt.Client()
