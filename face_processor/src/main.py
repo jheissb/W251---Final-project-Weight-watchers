@@ -28,9 +28,9 @@ def on_message(client,userdata, msg):
     print(str(msg.payload))
     try:
         face_img = face_image.deserializer(str(msg.payload))
+        process_face_image(face_img.left_image)
     except Exception as e:
         print(str(e))
-    process_face_image(face_img.left_image)
 
 
 mqttclient = mqtt.Client()
