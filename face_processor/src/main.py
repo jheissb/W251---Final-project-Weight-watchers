@@ -27,7 +27,7 @@ def on_message(client,userdata, msg):
     print("message received!")	
     img_payload = msg.payload.decode("utf-8") 
     face_img = face_image.deserializer(img_payload)
-    process_face_image(face_img.left_image)
+    process_face_image(face_img.left_face)
 
 
 mqttclient = mqtt.Client()
