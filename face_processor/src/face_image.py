@@ -13,7 +13,7 @@ class FaceImage(object):
         self.timestamp = datetime.now().strftime("%m-%d-%Y-%H-%M-%S")
         self.bmi = None
         #need to add timestamp
-    
+
     def serializer(self):
         print("get called")
         jsonStr = json.dumps(self.__dict__, cls=face_serde.FaceEncoder)
