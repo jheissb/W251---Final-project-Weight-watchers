@@ -25,8 +25,8 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client,userdata, msg):
     print("message received!")	
-    print(str(msg.payload))
-    face_img = face_image.deserializer(str(msg.payload))
+    img_payload = msg.payload.decode("utf-8") 
+    face_img = face_image.deserializer(img_payload)
     process_face_image(face_img.left_image)
 
 
