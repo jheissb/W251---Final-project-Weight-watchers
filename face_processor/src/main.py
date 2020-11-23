@@ -8,7 +8,7 @@ import paho.mqtt.client as mqtt
 
 from glob import glob
 from pathlib import Path
-import face_serde
+import face_image
 
 import argparse
 import config
@@ -26,12 +26,11 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client,userdata, msg):
     print("message received!")	
     print(str(msg.payload))
-    print(type(msg.payload))
     try:
-        face_image = face_serde.faceDecoder(str(msg.payload))
+        face_img = face_image.deserializer(str(msg.payload))
     except Exception as e:
         print(str(e))
-    process_face_image(face_image.left_image)
+    process_face_image(face_img.left_image)
 
 
 mqttclient = mqtt.Client()

@@ -18,6 +18,6 @@ class FaceImage(object):
         jsonStr = json.dumps(self.__dict__, cls=face_serde.FaceEncoder)
         return jsonStr
 
-    def deserializer(self, jsonStr):
-        jsonObject = json.loads(jsonStr, object_hook=face_serde.faceDecoder)
-        return jsonObject
+def deserializer(jsonStr):
+    jsonObject = json.loads(jsonStr, object_hook=face_serde.faceDecoder)
+    return jsonObject
