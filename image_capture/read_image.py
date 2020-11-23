@@ -34,34 +34,36 @@ client.connect(LOCAL_MQTT_HOST, LOCAL_MQTT_PORT, 60)
 
 def main():
     #Test face
-    face_image_path = input("Face image path: ")
-    face_image = None
-    try: 
-        img = cv2.imread(face_image_path)
-        face_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        # face_image = face_recognition.load_image_file(face_image_path)
-    except RuntimeError:
-        print("Could not open the image")
-        exit
-    face = face_constructor.face_main(face_image)
-    if face: 
-        face_str = face.serializer()
-        print(face_str)
-        publish_face(face_str)
-        print("Sent detected face image to mosquitto")
+
+    while True:
+        face_image_path = input("Face image path: ")
+        face_image = None
+        try: 
+            img = cv2.imread(face_image_path)
+            face_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            # face_image = face_recognition.load_image_file(face_image_path)
+        except RuntimeError:
+            print("Could not open the image")
+            exit
+        face = face_constructor.face_main(face_image)
+        if face: 
+            face_str = face.serializer()
+            print(face_str)
+            publish_face(face_str)
+            print("Sent detected face image to mosquitto")
 
     #Test body
-    body_image_path = input("Body image path: ")
-    body_image = None
-    try: 
-        body_image = cv2.imread(body_image_path)
-    except RuntimeError:
-        print("Could not open the image")
-        exit
-    body = body_constructor.body_main(body_image)
-    if body:
-        publish_body(body)
-        print("Sent detected body image to mosquitto")
+    # body_image_path = input("Body image path: ")
+    # body_image = None
+    # try: 
+    #     body_image = cv2.imread(body_image_path)
+    # except RuntimeError:
+    #     print("Could not open the image")
+    #     exit
+    # body = body_constructor.body_main(body_image)
+    # if body:
+    #     publish_body(body)
+    #     print("Sent detected body image to mosquitto")
 
 if __name__ == "__main__":
     main()
