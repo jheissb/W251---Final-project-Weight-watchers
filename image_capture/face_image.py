@@ -11,7 +11,7 @@ class FaceImage(object):
         self.right_face = right_face
         self.image_id = str(uuid.uuid4())
         self.timestamp = datetime.now().strftime("%m-%d-%Y-%H-%M-%S")
-        #need to add timestamp
+        self.bmi = None
     
     def serializer(self):
         print("get called")
