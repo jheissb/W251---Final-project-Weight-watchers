@@ -28,7 +28,7 @@ def get_face_encoding(image_path):
 
 def get_face_encoding_from_message(msg):
     print("get_face_encoding_from_message" + msg.image_id)
-    my_face_encoding = face_recognition.face_encodings(msg.left_face)
+    my_face_encoding = face_recognition.face_encodings(msg.raw_left_img)
     if not my_face_encoding:
         print("no face found !!!")
         return np.zeros(128).tolist()
