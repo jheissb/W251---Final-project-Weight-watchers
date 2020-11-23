@@ -25,9 +25,9 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client,userdata, msg):
     print("message received!")	
-    print(msg)
-    print(type(msg))
-    face_image = face_serde.faceDecoder(msg)
+    print(msg.payload)
+    print(type(msg.payload))
+    face_image = face_serde.faceDecoder(msg.payload)
     process_face_image(face_image.left_image)
 
 
