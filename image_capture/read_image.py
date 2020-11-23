@@ -18,6 +18,7 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe(LOCAL_BODY_MQTT_TOPIC)
 
 def publish_face(payload):
+    client.publish(LOCAL_FACE_MQTT_TOPIC, "test", qos=1, retain=False)
     client.publish(LOCAL_FACE_MQTT_TOPIC, payload, qos=1, retain=False)
 
 def publish_body(payload):
@@ -48,7 +49,6 @@ def main():
         face = face_constructor.face_main(face_image)
         if face: 
             face_str = face.serializer()
-            print(face_str)
             publish_face(face_str)
             print("Sent detected face image to mosquitto")
 
