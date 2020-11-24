@@ -28,15 +28,18 @@ def get_face_encoding(image_path):
 
 def get_face_encoding_from_message(msg):
     print("get_face_encoding_from_message" + msg.image_id)
-    my_face_encoding = face_recognition.face_encodings(np.array(msg.raw_left_img))
+    face_array = np.array(msg.raw_left_img)
+    my_face_encoding = face_recognition.face_encodings(face_array)
     if not my_face_encoding:
         picture_of_me = face_recognition.load_image_file("/images/vikky15.jpg")
         face_encoding = face_recognition.face_encodings(picture_of_me)
         face_encoding.sort()
         my_face_encoding.sort()
-        if face_encoding == my_face_encoding:
+        if not face_encoding == my_face_encoding:
             print("encoding are different")
-        if np.array(msg.raw_left_img) == picture_of_me:
+        if not (face_array == picture_of_me).all():
+            print(face_array.shape, picture_of_me.shape)
+            print(np.subtract(face_array, picture_of_me))
             print("image numpy arrary are different")
         return np.zeros(128).tolist()
     return my_face_encoding[0].tolist()
