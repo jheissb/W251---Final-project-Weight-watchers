@@ -26,8 +26,8 @@ def publish_body(payload):
 
 # filelist=os.listdir('image')
 # for imagepath in filelist[:]:
-    # imagepath = 'image/' + imagepath
-    # print(imagepath)
+#     imagepath = 'image/' + imagepath
+#     print(imagepath)
 client = mqtt.Client()
 client.on_connect = on_connect
 client.connect(LOCAL_MQTT_HOST, LOCAL_MQTT_PORT, 60)
@@ -51,8 +51,8 @@ def main():
             print(face.image_id)
             face_str = face.serializer()
             reverted_face_image = fimg.deserializer(face_str)
-            new_face = face_constructor.face_main(reverted_face_image.raw_left_img)
-            if new_face:
+            left_image_encoding = face_recognition.face_encodings(reverted_face_image.raw_left_img)
+            if left_image_encoding:
                 print("find new face")
             publish_face(face_str)
             print("Sent detected face image to mosquitto")
