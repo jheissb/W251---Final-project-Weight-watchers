@@ -30,7 +30,7 @@ def get_face_encoding_from_message(msg):
     print("get_face_encoding_from_message" + msg.image_id)
     my_face_encoding = face_recognition.face_encodings(np.array(msg.raw_left_img))
     if not my_face_encoding:
-        picture_of_me = face_recognition.load_image_file("/Users/lindayang/Desktop/mids/W251---Final-project-Weight-watchers/face_processor/src/images/vikky15.jpg")
+        picture_of_me = face_recognition.load_image_file("/images/vikky15.jpg")
         face_encoding = face_recognition.face_encodings(picture_of_me)
         face_encoding.sort()
         my_face_encoding.sort()
