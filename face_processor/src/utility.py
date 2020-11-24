@@ -29,6 +29,7 @@ def get_face_encoding(image_path):
 def get_face_encoding_from_message(msg):
     print("get_face_encoding_from_message" + msg.image_id)
     face_array = np.asarray(msg.raw_left_img)
+    print(face_array)
     my_face_encoding = face_recognition.face_encodings(face_array)
     if not my_face_encoding:
         picture_of_me = face_recognition.load_image_file("/images/vikky15.jpg")
