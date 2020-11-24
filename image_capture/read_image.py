@@ -4,7 +4,8 @@ import os
 import face_constructor
 import body_constructor
 import face_recognition
-import face_image
+import face_image as fimg
+import face_serde
 
 
 LOCAL_MQTT_HOST="172.18.0.2"
@@ -41,7 +42,6 @@ def main():
         try: 
             img = cv2.imread(face_image_path)
             face_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            print(face_image)
             # face_image = face_recognition.load_image_file(face_image_path)
         except RuntimeError:
             print("Could not open the image")
@@ -49,7 +49,11 @@ def main():
         face = face_constructor.face_main(face_image)
         if face: 
             print(face.image_id)
+            print(face_image.tolist())
             face_str = face.serializer()
+            reverted_face_image = fimg.deserializer(face_str)
+            # print(reverted_face_image.tolist())
+            new_face = face_constructor.face_main(reverted_face_image)
             publish_face(face_str)
             print("Sent detected face image to mosquitto")
 
