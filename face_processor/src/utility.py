@@ -38,6 +38,8 @@ def get_face_encoding_from_message(msg):
         if not face_encoding == my_face_encoding:
             print("encoding are different")
         if not (face_array == picture_of_me).all():
+            print(type(face_array))
+            print(type(picture_of_me))
             print(face_array.shape, picture_of_me.shape)
             print(np.subtract(face_array, picture_of_me))
             print("image numpy arrary are different")
