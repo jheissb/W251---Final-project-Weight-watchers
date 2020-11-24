@@ -9,4 +9,4 @@ RUN pip3 install numpy
 RUN pip3 install paho-mqtt
 # example from https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_gui/py_video_display/py_video_display.html
 COPY read_image.py read_image.py
-ADD image image 
+ADD images images 

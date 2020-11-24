@@ -51,9 +51,11 @@ def main():
             print(face.image_id)
             face_str = face.serializer()
             reverted_face_image = fimg.deserializer(face_str)
-            left_image_encoding = face_recognition.face_encodings(reverted_face_image.raw_left_img)
-            if left_image_encoding:
-                print("find new face")
+            print(type(reverted_face_image))
+            print(type(reverted_face_image.raw_left_img))
+            # left_image_encoding = face_recognition.face_encodings(reverted_face_image.raw_left_img)
+            # if left_image_encoding:
+            #     print("find new face")
             publish_face(face_str)
             print("Sent detected face image to mosquitto")
 
