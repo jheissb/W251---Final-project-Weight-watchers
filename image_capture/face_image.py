@@ -2,6 +2,8 @@ import uuid
 from datetime import datetime
 import json
 import face_serde
+import face_constructor
+import face_image as fimg
 
 class FaceImage(object):
     def __init__(self, raw_left_img, raw_right_img, left_face, right_face):
