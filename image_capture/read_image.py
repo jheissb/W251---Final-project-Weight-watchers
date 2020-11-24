@@ -54,7 +54,7 @@ def main():
             reverted_face_image = fimg.deserializer(face_str)
             print(type(reverted_face_image))
             print(type(np.asarray(reverted_face_image.raw_left_img)))
-            left_image_encoding = face_recognition.face_encodings(np.asarray(reverted_face_image.raw_left_img)))
+            left_image_encoding = face_recognition.face_encodings(np.asarray(reverted_face_image.raw_left_img))
             if left_image_encoding:
                 print("find new face")
             publish_face(face_str)
