@@ -51,7 +51,7 @@ def main():
             print(face.image_id)
             face_str = face.serializer()
             reverted_face_image = fimg.deserializer(face_str)
-            new_face = face_constructor.face_main(reverted_face_image)
+            new_face = face_constructor.face_main(reverted_face_image.raw_left_img)
             if new_face:
                 print("find new face")
             publish_face(face_str)
