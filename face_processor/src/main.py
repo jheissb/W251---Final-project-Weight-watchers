@@ -25,9 +25,12 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client,userdata, msg):
     print("message received!")	
-    img_payload = msg.payload.decode("utf-8") 
-    face_img = face_image.deserializer(img_payload)
-    process_face_image(face_img)
+    # img_payload = msg.payload.decode("utf-8") 
+    buff = np.fromstring(msg.payload, np.uint8)
+    buff = buff.reshape(1, -1)
+    img = cv2.imdecode(buff, cv2.COLOR_BGR2RGB)
+    # face_img = face_image.deserializer(img_payload)
+    process_face_image(img)
 
 
 mqttclient = mqtt.Client()
@@ -49,7 +52,7 @@ def process_face_image(face_img):
         bmi_dict = predict_bmi(face_img, model)
         print("type")
         print(type(face_img))
-        print(face_img.bmi)
+        print(bmi_dict)
         # face_img.bmi = bmi_dict
     else:
         print("training model...")

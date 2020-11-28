@@ -73,27 +73,5 @@ after get into the shell:
 #python3 single_cam.py
 
 docker run --name capture --network imgProcessor -ti imagecapture bash
-python3 detect_image.py --model=resnet --image /home/lindayang/Desktop/mids/W251---Final-project-Weight-watchers/imageCapture/image/people_2.jpg
+python3 dual_camera.py
 ```
-
-## Image Data Aggregator and Model Trainer
-There are 2 containers running on cloud.  
-One container would consume image message from our remote broker and store the image in our s3 bucket  
-One container would be the mosquitto broker that control the topic and communication to and from client  
-
-### Start Image Data Saver 
-
-#### Step 0 -  Create two aws ec2 instance with inbound rule open to all traffic
-
-#### Step 1 - Start broker
-```sh
-ssh -A ec2-user@PUBLICDNS
-```
-after get into the shell, start the mosquitto broker:
-```sh
-docker pull eclipse-mosquitto #(https://hub.docker.com/_/eclipse-mosquitto?tab=description)
-docker run -it -p 1883:1883 -p 9001:9001 eclipse-mosquitto
-docker exec -it 78f058cc0768 sh # for debug purpose
-```
-
-#### Step 2 - Start saver
