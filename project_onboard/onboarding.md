@@ -63,15 +63,14 @@ docker run --name faceprocessor --network imgProcessor -ti faceprocessor sh
 ```
 after get into the shell:
 ```sh
-#python3 main.py
+python3 main.py
 ```
 
 #### Step 3 - Start image capture with network
 ```sh
-#xhost +
-#docker run --name capture --network hw3 --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -ti imagecapture bash
-#python3 single_cam.py
+xhost +
+docker run --name capture --network imgProcessor --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -ti imagecapture bash
+python3 cam.py
 
-docker run --name capture --network imgProcessor -ti imagecapture bash
-python3 dual_camera.py
+#python3 read_image.py
 ```

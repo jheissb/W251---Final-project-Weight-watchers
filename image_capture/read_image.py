@@ -1,15 +1,10 @@
 import cv2
 import paho.mqtt.client as mqtt
 import os
-import face_constructor
-import body_constructor
-import face_recognition
-import face_image as fimg
-import face_serde
 import numpy as np
 
 
-LOCAL_MQTT_HOST="172.18.0.2"
+LOCAL_MQTT_HOST="processorbroker"
 LOCAL_MQTT_PORT=1883
 LOCAL_FACE_MQTT_TOPIC="imagedetection/faceextractor"
 

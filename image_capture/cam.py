@@ -32,7 +32,7 @@ while(True):
     # Our operations on the frame come here
     face_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     rc,png = cv2.imencode('.png', frame)
-    msg = png.tobytes()
+    msg = png.tostring()
     publish_face(msg)
     print("Sent detected face to mosquitto")
 	# ...

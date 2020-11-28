@@ -4,11 +4,12 @@ import time
 import os
 from datetime import datetime
 import uuid
+import cv2
 import paho.mqtt.client as mqtt
 
 from glob import glob
 from pathlib import Path
-import face_image
+from face_image import FaceImage
 
 import argparse
 import config
@@ -50,10 +51,8 @@ def process_face_image(face_img):
         print("running prediction...")
         time.sleep(2)
         bmi_dict = predict_bmi(face_img, model)
-        print("type")
-        print(type(face_img))
-        print(bmi_dict)
-        # face_img.bmi = bmi_dict
+        face = FaceImage(face_img, bmi_dict['bmi'])
+        print(face.bmi)
     else:
         print("training model...")
         profile_df = pd.read_csv(config.IMGS_INFO_FILE)
