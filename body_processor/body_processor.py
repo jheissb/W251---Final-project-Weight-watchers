@@ -26,10 +26,10 @@ def publish_result(payload):
 def calculate_ratio(img, keypoints):
   w, h = img.size
   if all(keypoints[1]) and all(keypoints[2]) and all(keypoints[15]) and all(keypoints[16]):
-    left_eye_points = np.asarray(round(keypoints[1][2] * w), round(keypoints[1][1] * h))
-    right_eye_points = np.asarray(round(keypoints[2][2] * w), round(keypoints[2][1] * h))
-    left_ankle_points = np.asarray(round(keypoints[15][2] * w), round(keypoints[15][1] * h))
-    right_ankle_points = np.asarray(round(keypoints[16][2] * w), round(keypoints[16][1] * h))
+    left_eye_points = np.asarray([round(keypoints[1][2] * w), round(keypoints[1][1] * h)])
+    right_eye_points = np.asarray([round(keypoints[2][2] * w), round(keypoints[2][1] * h)])
+    left_ankle_points = np.asarray([round(keypoints[15][2] * w), round(keypoints[15][1] * h)])
+    right_ankle_points = np.asarray([round(keypoints[16][2] * w), round(keypoints[16][1] * h)])
     left_height = np.linalg.norm(left_ankle_points-left_eye_points)
     right_height = np.linalg.norm(right_ankle_points-right_eye_points)
     avg_height = (left_height + right_height) / 2
