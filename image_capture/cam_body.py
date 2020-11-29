@@ -16,7 +16,7 @@ def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
     client.subscribe(LOCAL_FACE_MQTT_TOPIC)
 
-def publish_face(payload):
+def publish_body(payload):
     client.publish(LOCAL_FACE_MQTT_TOPIC, payload, qos=1, retain=False)
 
 client = mqtt.Client()
@@ -33,7 +33,7 @@ while(True):
     face_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     rc,png = cv2.imencode('.png', frame)
     msg = png.tostring()
-    publish_face(msg)
+    publish_body(msg)
     print("Sent detected face to mosquitto")
 	# ...
     cv2.imshow('frame',face_image)
