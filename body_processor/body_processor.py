@@ -44,6 +44,8 @@ def calculate_ratio(img, keypoints):
     avg_waist = pi * avg_hip
 
     return round((avg_waist/avg_height),4)
+  else:
+    return 0
 
 
 
@@ -52,7 +54,9 @@ def process_message(message):
   buff = buff.reshape(1, -1)
   img = cv2.imdecode(buff, cv2.COLOR_BGR2RGB)
   orgimg, keypoints = detect_pose(img)
-  ratio = calculate_ratio(orgimg, keypoints[0])
+  ratio = 0
+  if keypoints:
+    ratio = calculate_ratio(orgimg, keypoints[0])
   body_image = BodyImage(message.payload, ratio)
   print(str(body_image.ratio))
   publish_result(str(body_image.ratio))
