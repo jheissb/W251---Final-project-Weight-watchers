@@ -7,6 +7,8 @@ import numpy as np
 LOCAL_MQTT_HOST="processorbroker"
 LOCAL_MQTT_PORT=1883
 LOCAL_FACE_MQTT_TOPIC="imagedetection/faceextractor"
+LOCAL_BODY_MQTT_TOPIC="imagedetection/bodyextractor"
+
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -15,6 +17,10 @@ def on_connect(client, userdata, flags, rc):
 def publish_face(payload):
     client.publish(LOCAL_FACE_MQTT_TOPIC, payload, qos=1, retain=False)
     print("Sent detected face image to mosquitto")
+
+def publish_body(payload):
+    client.publish(LOCAL_BODY_MQTT_TOPIC, payload, qos=1, retain=False)
+    print("Sent detected body image to mosquitto")
 
 client = mqtt.Client()
 client.on_connect = on_connect
