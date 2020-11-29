@@ -25,9 +25,6 @@ docker build -t imagecapture -f Dockerfile .
 #in directory /image_processor_broker
 docker build -t imageprocessorbroker -f Dockerfile .
 
-#in directory /body_processor
-docker build -t bodyprocessor -f Dockerfile .
-
 #in directory /face_processor
 docker build -t faceprocessor -f Dockerfile .
 ```
@@ -48,14 +45,6 @@ after get into the shell, start the mosquitto broker:
 ```
 
 #### Step 2 - Start processor with network
-* for body
-```sh
-docker run --name processor --network imgProcessor -ti imageprocessor sh
-```
-after get into the shell:
-```sh
-python3 image_processor.py
-```
 
 * for face
 ```sh
