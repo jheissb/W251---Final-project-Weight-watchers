@@ -54,7 +54,7 @@ def process_message(message):
   img = cv2.imdecode(buff, cv2.COLOR_BGR2RGB)
   orgimg, keypoints = detect_pose(img)
   ratio = calculate_ratio(orgimg, keypoints[0])
-  body_image = BodyImage(orgimg, ratio)
+  body_image = BodyImage(img, ratio)
   print(body_image.ratio)
   publish_result(body_image.serializer())
 
