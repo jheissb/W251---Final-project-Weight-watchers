@@ -41,7 +41,7 @@ def main():
             exit
         _,png = cv2.imencode('.png', face_image)
         face_msg = png.tostring()
-        publish_face(face_msg)
+        publish_body(face_msg)
             
 
 if __name__ == "__main__":
