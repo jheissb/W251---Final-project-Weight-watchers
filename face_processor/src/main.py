@@ -19,6 +19,7 @@ from model import train_test_splits, train_bmi_model, predict_bmi
 LOCAL_MQTT_HOST="processorbroker" 
 LOCAL_MQTT_PORT=1883
 LOCAL_MQTT_TOPIC="imagedetection/faceextractor"
+LOCAL_MQTT_RESULT_TOPIC="imagedetection/faceprocessor/result"
 
 def on_connect(client, userdata, flags, rc):
         print("connected to  broker with rc: " + str(rc))
@@ -32,6 +33,10 @@ def on_message(client,userdata, msg):
     img = cv2.imdecode(buff, cv2.COLOR_BGR2RGB)
     # face_img = face_image.deserializer(img_payload)
     process_face_image(img)
+
+def publish_result(payload):
+    mqttclient.publish(LOCAL_MQTT_RESULT_TOPIC, payload, qos=1, retain=False)
+    print("Sent bmi result to mosquitto")
 
 
 mqttclient = mqtt.Client()
@@ -53,6 +58,7 @@ def process_face_image(face_img):
         bmi_dict = predict_bmi(face_img, model)
         face = FaceImage(face_img, bmi_dict['bmi'])
         print(face.bmi)
+        publish_result(str(face.bmi))
     else:
         print("training model...")
         profile_df = pd.read_csv(config.IMGS_INFO_FILE)
