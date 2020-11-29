@@ -5,7 +5,7 @@ import cv2
 from pose_detector import detect_pose
 from body_image import BodyImage
 
-LOCAL_MQTT_HOST="127.18.0.2" 
+LOCAL_MQTT_HOST="172.18.0.2" 
 LOCAL_MQTT_PORT=1883
 LOCAL_MQTT_TOPIC="imagedetection/bodyextractor"
 LOCAL_MQTT_RESULT_TOPIC="imagedetection/bodyprocessor/result"

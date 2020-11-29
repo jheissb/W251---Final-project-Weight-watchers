@@ -55,6 +55,11 @@ after get into the shell:
 python3 main.py
 ```
 
+* for body
+```sh
+python3 body_processor.py
+```
+
 #### Step 3 - Start image capture with network
 ```sh
 xhost +
@@ -62,5 +67,6 @@ docker run --name capture --network imgProcessor --privileged -e DISPLAY=$DISPLA
 python3 cam.py
 
 #for testing purpose
+#docker run --name capture --network imgProcessor -ti imagecapture bash
 #python3 read_image.py 
 ```
