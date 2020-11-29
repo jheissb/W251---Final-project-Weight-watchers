@@ -65,6 +65,7 @@ python3 body_processor.py
 xhost +
 docker run --name capture --network imgProcessor --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -ti imagecapture bash
 python3 cam.py
+python3 cam_body.py
 
 #for testing purpose
 #docker run --name capture --network imgProcessor -ti imagecapture bash
