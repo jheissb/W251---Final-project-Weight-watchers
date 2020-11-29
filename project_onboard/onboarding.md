@@ -72,5 +72,6 @@ xhost +
 docker run --name capture --network imgProcessor --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -ti imagecapture bash
 python3 cam.py
 
-#python3 read_image.py
+#for testing purpose
+#python3 read_image.py 
 ```

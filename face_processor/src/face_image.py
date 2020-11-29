@@ -15,7 +15,3 @@ class FaceImage(object):
         print("get called")
         jsonStr = json.dumps(self.__dict__)
         return jsonStr
-
-def deserializer(jsonStr):
-    jsonObject = json.loads(jsonStr, object_hook=face_serde.faceDecoder)
-    return jsonObject
