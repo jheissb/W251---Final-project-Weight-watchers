@@ -201,7 +201,7 @@ def detect_pose(body_img):
     img = image.copy()
     #img = execute(img)
     keypoints = execute_2(img, orgimg)
-    return keypoints
+    return (orgimg, keypoints)
 
 # dir, filename = os.path.split(args.image)
 # name, ext = os.path.splitext(filename)
