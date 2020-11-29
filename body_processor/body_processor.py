@@ -47,9 +47,10 @@ def process_message(message):
   buff = buff.reshape(1, -1)
   img = cv2.imdecode(buff, cv2.COLOR_BGR2RGB)
   keypoints = detect_pose(img)
-  ratio = calculate_ratio(img, keypoints)
-  body_image = BodyImage(img, ratio)
-  print(body_image.ratio)
+  print(keypoints)
+  # ratio = calculate_ratio(img, keypoints)
+  # body_image = BodyImage(img, ratio)
+  # print(body_image.ratio)
   publish_result(keypoints)
 
 mqttclient = mqtt.Client()
