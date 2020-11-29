@@ -32,7 +32,7 @@ def on_message(client,userdata, msg):
     buff = buff.reshape(1, -1)
     img = cv2.imdecode(buff, cv2.COLOR_BGR2RGB)
     # face_img = face_image.deserializer(img_payload)
-    process_face_image(img)
+    process_face_image(msg.payload, img)
 
 def publish_result(payload):
     mqttclient.publish(LOCAL_MQTT_RESULT_TOPIC, payload, qos=1, retain=False)
@@ -47,7 +47,7 @@ parser = argparse.ArgumentParser(description='BMI from face')
 parser.add_argument('--mode', type=str, default='prediction', help = 'prediction or training' )
 args = parser.parse_args()    
 
-def process_face_image(face_img):
+def process_face_image(payload, face_img):
     if 'prediction' in args.mode:
         print("loading trained bmi model...")
         time.sleep(2)
@@ -55,7 +55,7 @@ def process_face_image(face_img):
         print("running prediction...")
         time.sleep(2)
         bmi_dict = predict_bmi(face_img, model)
-        face = FaceImage(face_img, bmi_dict['bmi'])
+        face = FaceImage(payload, bmi_dict['bmi'])
         print(face.bmi)
         publish_result(str(face.bmi))
     else:
