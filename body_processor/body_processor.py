@@ -34,8 +34,8 @@ def calculate_ratio(img, keypoints):
     right_height = np.linalg.norm(right_ankle_points-right_eye_points)
     avg_height = (left_height + right_height) / 2
 
-    left_hip_points = np.asarray(round(keypoints[11][2] * w), round(keypoints[11][1] * h))
-    right_hip_points = np.asarray(round(keypoints[12][2] * w), round(keypoints[12][1] * h))
+    left_hip_points = np.asarray([round(keypoints[11][2] * w), round(keypoints[11][1] * h)])
+    right_hip_points = np.asarray([round(keypoints[12][2] * w), round(keypoints[12][1] * h)])
     avg_hip = np.linalg.norm(right_hip_points-left_hip_points)
 
     return round((avg_hip/avg_height),4)
