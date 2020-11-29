@@ -15,34 +15,6 @@ import os.path
 import os
 import paho.mqtt.client as mqtt
 
-LOCAL_MQTT_HOST="processorbroker" 
-LOCAL_MQTT_PORT=1883
-LOCAL_MQTT_TOPIC="imagedetection/faceextractor"
-LOCAL_MQTT_RESULT_TOPIC="imagedetection/faceprocessor/result"
-
-def on_connect(client, userdata, flags, rc):
-        print("connected to  broker with rc: " + str(rc))
-        client.subscribe(LOCAL_MQTT_TOPIC)
-
-def on_message(client,userdata, msg):
-    print("message received!")	
-    # img_payload = msg.payload.decode("utf-8") 
-    buff = np.fromstring(msg.payload, np.uint8)
-    buff = buff.reshape(1, -1)
-    img = cv2.imdecode(buff, cv2.COLOR_BGR2RGB)
-    # face_img = face_image.deserializer(img_payload)
-    process_face_image(img)
-
-def publish_result(payload):
-    mqttclient.publish(LOCAL_MQTT_RESULT_TOPIC, payload, qos=1, retain=False)
-    print("Sent bmi result to mosquitto")
-
-
-mqttclient = mqtt.Client()
-mqttclient.on_connect = on_connect
-mqttclient.connect(LOCAL_MQTT_HOST, LOCAL_MQTT_PORT, 60)
-mqttclient.on_message = on_message
-
 #This file is for trt_pose to 
 
 '''
