@@ -55,8 +55,8 @@ def process_message(message):
   orgimg, keypoints = detect_pose(img)
   ratio = calculate_ratio(orgimg, keypoints[0])
   body_image = BodyImage(message.payload, ratio)
-  print(body_image.ratio)
-  publish_result(body_image.ratio)
+  print(str(body_image.ratio))
+  publish_result(str(body_image.ratio))
 
 mqttclient = mqtt.Client()
 mqttclient.on_connect = on_connect
