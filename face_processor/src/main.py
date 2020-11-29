@@ -38,7 +38,6 @@ def publish_result(payload):
     mqttclient.publish(LOCAL_MQTT_RESULT_TOPIC, payload, qos=1, retain=False)
     print("Sent bmi result to mosquitto")
 
-
 mqttclient = mqtt.Client()
 mqttclient.on_connect = on_connect
 mqttclient.connect(LOCAL_MQTT_HOST, LOCAL_MQTT_PORT, 60)

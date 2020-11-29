@@ -22,7 +22,7 @@ client.connect(LOCAL_MQTT_HOST, LOCAL_MQTT_PORT, 60)
 
 
 def main():
-    #Test face
+    #Test
 
     while True:
         face_image_path = input("Face image path: ")
@@ -36,10 +36,6 @@ def main():
         _,png = cv2.imencode('.png', face_image)
         face_msg = png.tostring()
         publish_face(face_msg)
-        # if face: 
-        #     print(face.image_id)
-        #     face_str = face.serializer()
-        #     publish_face(face_str)
             
 
 if __name__ == "__main__":
