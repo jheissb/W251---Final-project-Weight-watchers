@@ -1,7 +1,6 @@
 import uuid
 from datetime import datetime
 import json
-import face_serde
 
 class FaceImage(object):
     def __init__(self, raw_img, bmi):
