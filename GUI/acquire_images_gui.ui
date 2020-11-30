@@ -1,39 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Dialog</class>
- <widget class="QDialog" name="Dialog">
+ <class>Form</class>
+ <widget class="QDialog" name="Form">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1416</width>
+    <width>1271</width>
     <height>926</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Weight Watchers</string>
   </property>
-  <widget class="QWidget" name="mugshot" native="true">
-   <property name="geometry">
-    <rect>
-     <x>50</x>
-     <y>40</y>
-     <width>481</width>
-     <height>361</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QWidget" name="mugshot_2" native="true">
-   <property name="geometry">
-    <rect>
-     <x>560</x>
-     <y>40</y>
-     <width>431</width>
-     <height>361</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="take_face_picture_btn">
    <property name="geometry">
     <rect>
      <x>180</x>
@@ -46,7 +26,7 @@
     <string>Take Picture</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="retake_face_picture_btn">
    <property name="geometry">
     <rect>
      <x>340</x>
@@ -95,7 +75,7 @@
     <string>Body image</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_4">
+  <widget class="QPushButton" name="retake_body_picture_btn">
    <property name="geometry">
     <rect>
      <x>840</x>
@@ -108,7 +88,7 @@
     <string>Retake Picture</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_5">
+  <widget class="QPushButton" name="take_body_picture_btn">
    <property name="geometry">
     <rect>
      <x>620</x>
@@ -121,12 +101,12 @@
     <string>Take Picture</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="text_output">
    <property name="geometry">
     <rect>
      <x>1020</x>
      <y>50</y>
-     <width>181</width>
+     <width>201</width>
      <height>361</height>
     </rect>
    </property>
@@ -134,7 +114,7 @@
     <string>data_output</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_7">
+  <widget class="QPushButton" name="submit_btn">
    <property name="geometry">
     <rect>
      <x>560</x>
@@ -281,6 +261,15 @@
         </color>
        </brush>
       </colorrole>
+      <colorrole role="PlaceholderText">
+       <brush brushstyle="NoBrush">
+        <color alpha="128">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
      </active>
      <inactive>
       <colorrole role="WindowText">
@@ -412,6 +401,15 @@
       <colorrole role="ToolTipText">
        <brush brushstyle="SolidPattern">
         <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
+      <colorrole role="PlaceholderText">
+       <brush brushstyle="NoBrush">
+        <color alpha="128">
          <red>0</red>
          <green>0</green>
          <blue>0</blue>
@@ -555,6 +553,15 @@
         </color>
        </brush>
       </colorrole>
+      <colorrole role="PlaceholderText">
+       <brush brushstyle="NoBrush">
+        <color alpha="128">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </colorrole>
      </disabled>
     </palette>
    </property>
@@ -565,7 +572,7 @@
     <string>Submit data</string>
    </property>
   </widget>
-  <widget class="QWidget" name="widget" native="true">
+  <widget class="MplWidget" name="history_plot" native="true">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -593,7 +600,7 @@
     <string>Subject's History</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_5">
+  <widget class="QLabel" name="bmi_tag">
    <property name="geometry">
     <rect>
      <x>210</x>
@@ -611,7 +618,7 @@
     <string>BMI:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_8">
+  <widget class="QLabel" name="w2height_label">
    <property name="geometry">
     <rect>
      <x>740</x>
@@ -629,7 +636,7 @@
     <string>Waist-to-height ratio:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_9">
+  <widget class="QLabel" name="w2hip_label">
    <property name="geometry">
     <rect>
      <x>740</x>
@@ -647,7 +654,41 @@
     <string>Waist-to-hip ratio:</string>
    </property>
   </widget>
+  <widget class="QLabel" name="face">
+   <property name="geometry">
+    <rect>
+     <x>46</x>
+     <y>46</y>
+     <width>481</width>
+     <height>361</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Face image</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>40</y>
+     <width>421</width>
+     <height>371</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Body Image</string>
+   </property>
+  </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MplWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">mplwidget</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
