@@ -8,7 +8,7 @@ cap = cv2.VideoCapture(2)
 face_cascade = cv2.CascadeClassifier('/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml')
 
 
-LOCAL_MQTT_HOST="172.18.0.2"
+LOCAL_MQTT_HOST="processorbroker"
 LOCAL_MQTT_PORT=1883
 LOCAL_FACE_MQTT_TOPIC="imagedetection/faceextractor"
 
