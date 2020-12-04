@@ -47,15 +47,28 @@ def calculate_ratio(img, keypoints):
   else:
     return 0
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> main
 def process_message(message):
   buff = np.fromstring(message.payload, np.uint8)
   buff = buff.reshape(1, -1)
   img = cv2.imdecode(buff, cv2.COLOR_BGR2RGB)
+<<<<<<< HEAD
   orgimg, keypoints, processed_img = detect_pose(img)
   ratio = 0
   if keypoints:
     ratio = calculate_ratio(orgimg, keypoints[0])
   body_image = BodyImage(message.payload, processed_img, ratio)
+=======
+  orgimg, keypoints = detect_pose(img)
+  ratio = 0
+  if keypoints:
+    ratio = calculate_ratio(orgimg, keypoints[0])
+  body_image = BodyImage(message.payload, ratio)
+>>>>>>> main
   print(str(body_image.ratio))
   publish_result(str(body_image.ratio))
 
