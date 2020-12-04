@@ -153,11 +153,7 @@ def execute_2(img, org):
         keypoints.append(kpoint)
     print("Human count:%d len:%d "%(counts[0], len(counts)))
     print('===== Net FPS :%f ====='%( 1 / (end - start)))
-<<<<<<< HEAD:body_processor/pose_detector.py
     return keypoints,org
-=======
-    return keypoints
->>>>>>> main:image_capture/pose_detector.py
 
 with open('human_pose.json', 'r') as f:
     human_pose = json.load(f)
@@ -204,13 +200,8 @@ def detect_pose(body_img):
 
     img = image.copy()
     #img = execute(img)
-<<<<<<< HEAD:body_processor/pose_detector.py
     keypoints, processed_img = execute_2(img, orgimg)
     return (orgimg, keypoints, processed_img)
-=======
-    keypoints = execute_2(img, orgimg)
-    return (orgimg, keypoints)
->>>>>>> main:image_capture/pose_detector.py
 
 # dir, filename = os.path.split(args.image)
 # name, ext = os.path.splitext(filename)
