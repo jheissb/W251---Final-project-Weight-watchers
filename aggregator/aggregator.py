@@ -7,6 +7,7 @@
 import paho.mqtt.client as mqtt
 import os
 import io
+import json
 
 REMOTE_MQTT_HOST="44.233.34.126"
 REMOTE_MQTT_PORT=1883
@@ -23,7 +24,10 @@ def on_message(client,userdata,msg):
   try:
     print("message received!")	
     try:
-      payload = io.BytesIO(msg.payload)
+      m_decode=str(msg.payload.decode("utf-8","ignore"))
+      payload=json.loads(m_decode)
+      # buff = np.fromstring(message.payload, np.uint8)
+      # buff = buff.reshape(1, -1)
       if msg.topic == REMOTE_MQTT_FACE_TOPIC:
           return aggregate_face(payload)
       if msg.topic == REMOTE_MQTT_BODY_TOPIC:
