@@ -13,14 +13,12 @@ from s3util import get_and_insurpt_user_data, retrive_user_hitstorical_data_by_f
 
 REMOTE_MQTT_HOST="44.233.34.126"
 REMOTE_MQTT_PORT=1883
-REMOTE_MQTT_FACE_TOPIC="imagedetection/faceprocessor"
-REMOTE_MQTT_BODY_TOPIC="imagedetection/aggregator"
+REMOTE_MQTT_TOPIC="imagedetection/aggregator"
 
 
 def on_connect_remote(client, userdata, flags, rc):
         print("connected to remote broker with rc: " + str(rc))
-        client.subscribe(REMOTE_MQTT_FACE_TOPIC)
-        client.subscribe(REMOTE_MQTT_BODY_TOPIC)
+        client.subscribe(REMOTE_MQTT_TOPIC)
 	
 def on_message(client,userdata,msg):
   try:

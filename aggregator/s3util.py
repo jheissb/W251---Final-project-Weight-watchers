@@ -30,27 +30,30 @@ S3_FACE_ID_FOLDER_NAME='face-id'
 S3_FACE_ID_KEY_FORMAT=S3_BUCKET_NAME+"/"+ S3_FACE_ID_FOLDER_NAME+"/{id}"
 S3_USER_DATA_KEY_FORMAT=S3_BUCKET_NAME+"/"+ S3_USER_HISTORICAL_FOLDER_NAME+"/{id}/{year}/{month}/{day}"
 
-def get_and_insurpt_user_data(body_object, face_id):
+def save_face_data(face_img, face_id):
+    key = S3_FACE_ID_KEY_FORMAT.format(id=face_id)
+    s3_client.put_object(Bucket=S3_BUCKET_NAME, Key=key)
+
+def get_and_insurpt_user_data(user_object, face_id):
     now = datetime.now() # current date and time
     s3_key = S3_USER_DATA_KEY_FORMAT.format(id=face_id, year=now.year, month=now.month, day=now.day)
     user_object = retrive_user_historical_data_by_date_and_face_id(s3_key)
     logger.info("getting user object, user bmi :{}".format(user_object['bmi']))
-    user_object['keypoints']=body_object['keypoints']
-    user_object['wait-height-ratio']=body_object['wait-height-ratio']
-    user_object['body-imag']=body_object['body-imag']
+    user_object['keypoints']=user_object['keypoints']
+    user_object['wait-height-ratio']=user_object['wait-height-ratio']
+    user_object['body-imag']=user_object['body-imag']
+    user_object['bmi']=user_object['bmi']
+    user_object['face-img']=user_object['face-img']
     s3_client.Bucket(S3_BUCKET_NAME).put_object(Key=s3_key, Body=str(json.dumps(user_object)), ACL='public-read')
 
-def get_and_insurpt_face(face_object, face_id):
-    now = datetime.now() # current date and time
-    s3_key = S3_USER_DATA_KEY_FORMAT.format(id=face_id, year=now.year, month=now.month, day=now.day)
-    user_object = retrive_user_historical_data_by_date_and_face_id(s3_key)
-    logger.info("getting user object, user ratio :{}".format(user_object['ratio']))
-    user_object['bmi']=face_object['bmi']
-    user_object['face-img']=face_object['face-img']
-    s3_client.Bucket(S3_BUCKET_NAME).put_object(Key=s3_key, Body=str(json.dumps(user_object)), ACL='public-read')
+def retrive_all_face_keys():
+    # prefix = "{}/{}".format(S3_BUCKET_NAME, S3_FACE_ID_FOLDER_NAME)
+    objects = s3_client.list_objects_v2(Bucket=S3_BUCKET_NAME,Prefix=S3_FACE_ID_FOLDER_NAME)
 
-def retrive_files_by_folder():
-    return None
+    user_historical_data = []
+    for key_object in objects['Contents']:
+        user_historical_data.append(key_object['key'])
+    return user_historical_data
 
 #TODO: deal with truncated file
 def retrive_user_hitstorical_data_by_face_id(face_id):
