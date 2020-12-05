@@ -30,7 +30,7 @@ S3_FACE_ID_FOLDER_NAME='face-id'
 S3_FACE_ID_KEY_FORMAT=S3_BUCKET_NAME+"/"+ S3_FACE_ID_FOLDER_NAME+"/{id}"
 S3_USER_DATA_KEY_FORMAT=S3_BUCKET_NAME+"/"+ S3_USER_HISTORICAL_FOLDER_NAME+"/{id}/{year}/{month}/{day}"
 
-def get_and_insurpt_body(body_object, face_id):
+def get_and_insurpt_user_data(body_object, face_id):
     now = datetime.now() # current date and time
     s3_key = S3_USER_DATA_KEY_FORMAT.format(id=face_id, year=now.year, month=now.month, day=now.day)
     user_object = retrive_user_historical_data_by_date_and_face_id(s3_key)

@@ -5,7 +5,7 @@ import glob
 
 FACE_ID_FILE_PATH = ""
 
-def face_main(new_img):
+def recognit_face(new_img):
     encoding_list = []
     for image_file in os.listdir(FACE_ID_FILE_PATH):
         new_img = face_recognition.load_image_file( os.path.join(FACE_ID_FILE_PATH, image_file))
@@ -21,6 +21,7 @@ def face_main(new_img):
                 #replace the face database with the new face
                 #get_face_id()
                 #return face id
+                break
 
 
 def cut_face_and_save( output_path, image, num_files ):
@@ -34,5 +35,3 @@ def cut_face_and_save( output_path, image, num_files ):
         print ("added: ", file_name)
         final.save( file_name, "PNG" )
         num_files += 1
-
-face_main("input", "output")

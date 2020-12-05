@@ -8,11 +8,13 @@ import paho.mqtt.client as mqtt
 import os
 import io
 import json
+from face_recoginitor import recognit_face
+from s3util import get_and_insurpt_user_data, retrive_user_hitstorical_data_by_face_id
 
 REMOTE_MQTT_HOST="44.233.34.126"
 REMOTE_MQTT_PORT=1883
 REMOTE_MQTT_FACE_TOPIC="imagedetection/faceprocessor"
-REMOTE_MQTT_BODY_TOPIC="imagedetection/bodyprocessor"
+REMOTE_MQTT_BODY_TOPIC="imagedetection/aggregator"
 
 
 def on_connect_remote(client, userdata, flags, rc):
@@ -28,21 +30,17 @@ def on_message(client,userdata,msg):
       payload=json.loads(m_decode)
       # buff = np.fromstring(message.payload, np.uint8)
       # buff = buff.reshape(1, -1)
-      if msg.topic == REMOTE_MQTT_FACE_TOPIC:
-          return aggregate_face(payload)
-      if msg.topic == REMOTE_MQTT_BODY_TOPIC:
-          return aggregate_body(payload)
+      aggregate_object(payload)
       print('finish aggregator')
     except Exception as e:
       print(str(e))
   except Exception as e:
     print(str(e))
 
-def aggregate_body(msg):
-    return None
-
-def aggregate_face(msg):
-    return None
+def aggregate_object(user_object):
+  face_id = recognit_face(user_object['face-img'])
+  get_and_insurpt_user_data(user_object, face_id)
+  return retrive_user_hitstorical_data_by_face_id(face_id)
 
 remote_mqttclient = mqtt.Client()
 remote_mqttclient.on_connect = on_connect_remote
