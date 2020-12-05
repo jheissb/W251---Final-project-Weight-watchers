@@ -34,16 +34,16 @@ def save_face_data(face_img, face_id):
     key = S3_FACE_ID_KEY_FORMAT.format(id=face_id)
     s3_client.put_object(Bucket=S3_BUCKET_NAME, Key=key)
 
-def get_and_insurpt_user_data(user_object, face_id):
+def get_and_insurpt_user_data(update_user_object, face_id):
     now = datetime.now() # current date and time
     s3_key = S3_USER_DATA_KEY_FORMAT.format(id=face_id, year=now.year, month=now.month, day=now.day)
     user_object = retrive_user_historical_data_by_date_and_face_id(s3_key)
-    logger.info("getting user object, user bmi :{}".format(user_object['bmi']))
-    user_object['keypoints']=user_object['keypoints']
-    user_object['wait-height-ratio']=user_object['wait-height-ratio']
-    user_object['body-imag']=user_object['body-imag']
-    user_object['bmi']=user_object['bmi']
-    user_object['face-img']=user_object['face-img']
+    logger.info("getting user object, user bmi :{}".format(update_user_object['bmi']))
+    user_object['keypoints']=update_user_object['keypoints']
+    user_object['wait-height-ratio']=update_user_object['wait-height-ratio']
+    user_object['body-imag']=update_user_object['body-imag']
+    user_object['bmi']=update_user_object['bmi']
+    user_object['face-img']=update_user_object['face-img']
     s3_client.Bucket(S3_BUCKET_NAME).put_object(Key=s3_key, Body=str(json.dumps(user_object)), ACL='public-read')
 
 def retrive_all_face_keys():

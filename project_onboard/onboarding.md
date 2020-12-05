@@ -76,3 +76,17 @@ python3 cam_body.py #for body
 #docker run --name capture --network imgProcessor -ti imagecapture bash
 #python3 read_image.py 
 ```
+
+## Image Aggregator on the cloud
+
+#### Step 0 -  start remote broker
+```
+#in ec2-container
+docker pull eclipse-mosquitto (https://hub.docker.com/_/eclipse-mosquitto?tab=description)
+docker run -it -p 1883:1883 eclipse-mosquitto
+```
+#### Step 0 -  start aggregator
+```
+#in ec2-container
+docker build -t aggregator -f Dockerfile .
+```
