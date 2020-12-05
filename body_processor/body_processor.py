@@ -41,9 +41,10 @@ def calculate_ratio(img, keypoints):
     right_shoulder_points = np.asarray([round(keypoints[6][2] * w), round(keypoints[6][1] * h)])
     avg_shoulder = np.linalg.norm(right_shoulder_points-left_shoulder_points)
     avg_hip = np.linalg.norm(right_hip_points-left_hip_points)
-    avg_waist = pi * avg_hip
-
-    return round((avg_waist/avg_height),4)
+    avg_waist = pi * (avg_hip+avg_shoulder) / 2
+    waist_height_ratio = round((avg_waist/avg_height),4)
+    waist_hip_ratio = round((avg_waist/avg_hip),4)
+    return (waist_height_ratio,waist_hip_ratio)
   else:
     return 0
 
