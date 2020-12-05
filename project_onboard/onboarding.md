@@ -27,6 +27,7 @@ docker build -t imageprocessorbroker -f Dockerfile .
 
 #in directory /face_processor
 docker build -t faceprocessor -f Dockerfile .
+
 ```
 ### Start Image Processor
 
@@ -55,8 +56,12 @@ after get into the shell:
 python3 main.py
 ```
 
-* for body
+* for body  
+
+follow this articale to install trt_pose on your jeston: [install jetson](https://spyjetson.blogspot.com/2019/12/jetsonnano-human-pose-estimation-using.html)  
+
 ```sh
+#in directory /body_processor
 python3 body_processor.py
 ```
 
