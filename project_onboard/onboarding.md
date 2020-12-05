@@ -1,5 +1,7 @@
-# WAIT WATCHER
-wait watcher is using NVDIA Jeston Xavier, USB camera, opencv computer vision library, aws cloud service to detect face and human body through edge, and using machine learning model and and upload to remote through mosquitto, finally the image would get saved in s3 bucket. 
+# WEIGHT WATCHER
+Weight watcher is a system for long term monitoring of weight and obesity risk. It runs two local machine learning models to estimate Body Mass Index (MBI) from face images and detects anatomical points and hip to waist and waist to height ratios, which are relevant metrics to predict obesity risk. The system uses NVDIA Jeston Xavier and a USB camera at the edge and AWS cloud services. In adition to the local ML models, a third model for face recognition runs in the cloud to identify if a subject has been recorded previously and report historical data from a subject, wich is stored in a S3 bucket. A GUI allows acquisition of face and full body images which are sent to these 3 ML models as a message using MQTT protocol, and in turn each model returns also a message with the BMI estimation, identification of anatomical points and ratios and historical data of the subject, which are displayed by the GUI.
+
+The system can be easily scalabale as each edge device perfomr most of the work independnetly and the database manager that runs in the cloud can handle messages coming from different devices (for example to asses the eficacy of nutrition policies in schools). Other use cases (with some modifications) is to anonimously determine BMI of clients in supermarkets and clothing stores.
 
 Topic:  
 * for edge container communication: 
@@ -10,13 +12,14 @@ Topic:
   * imagedetection/faceprocessor
 
 QoS:   
-* Here, I choosed `at least once (1)`, I assume this is for business that does not worry about object duplication but want guarantee of delivery
+* We chosed `at least once (1)`, assuming object duplication is not an issue but guarantee of delivery is required
 
 ## Image Capture & Processor
 There are 3 containers running on edge.  
-One container would consume image from our webcam  
+One container runs the GUI and acquire images from the webcam  
 One container would be the mosquitto broker that control the topic and communication to and from client  
-One container would consume the image from webcam and process and send over to our cloud
+One container would consume the images from webcam and process and send over to the cloud
+
 ### Build Docker Image
 ```sh
 #in directory /image_capture
