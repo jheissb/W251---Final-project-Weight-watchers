@@ -16,38 +16,11 @@ import config
 from utility import get_index_of_digit, get_face_encoding, save_model, load_model
 from model import train_test_splits, train_bmi_model, predict_bmi
 
-LOCAL_MQTT_HOST="processorbroker" 
-LOCAL_MQTT_PORT=1883
-LOCAL_MQTT_TOPIC="imagedetection/faceextractor"
-LOCAL_MQTT_RESULT_TOPIC="imagedetection/faceprocessor/result"
-
-def on_connect(client, userdata, flags, rc):
-        print("connected to  broker with rc: " + str(rc))
-        client.subscribe(LOCAL_MQTT_TOPIC)
-
-def on_message(client,userdata, msg):
-    print("message received!")	
-    # img_payload = msg.payload.decode("utf-8") 
-    buff = np.fromstring(msg.payload, np.uint8)
-    buff = buff.reshape(1, -1)
-    img = cv2.imdecode(buff, cv2.COLOR_BGR2RGB)
-    # face_img = face_image.deserializer(img_payload)
-    process_face_image(msg.payload, img)
-
-def publish_result(payload):
-    mqttclient.publish(LOCAL_MQTT_RESULT_TOPIC, payload, qos=1, retain=False)
-    print("Sent bmi result to mosquitto")
-
-mqttclient = mqtt.Client()
-mqttclient.on_connect = on_connect
-mqttclient.connect(LOCAL_MQTT_HOST, LOCAL_MQTT_PORT, 60)
-mqttclient.on_message = on_message
-
 parser = argparse.ArgumentParser(description='BMI from face')
 parser.add_argument('--mode', type=str, default='prediction', help = 'prediction or training' )
 args = parser.parse_args()    
 
-def process_face_image(payload, face_img):
+def process_face_image(face_img):
     if 'prediction' in args.mode:
         print("loading trained bmi model...")
         time.sleep(2)
@@ -55,9 +28,7 @@ def process_face_image(payload, face_img):
         print("running prediction...")
         time.sleep(2)
         bmi_dict = predict_bmi(face_img, model)
-        face = FaceImage(payload, bmi_dict['bmi'])
-        print(face.bmi)
-        publish_result(str(face.bmi))
+        return bmi_dict['bmi']
     else:
         print("training model...")
         profile_df = pd.read_csv(config.IMGS_INFO_FILE)
@@ -97,6 +68,3 @@ def process_face_image(payload, face_img):
         bmi_model = train_bmi_model(X_train, y_bmi_train, X_test, y_bmi_test)
         print("saving trained model...")
         save_model(bmi_model, config.OUTPUT_MODEL_DIR, config.OUTPUT_MODEL_NAME)
-
-# go into a loop
-mqttclient.loop_forever()
