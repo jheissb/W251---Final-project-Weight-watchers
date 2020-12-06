@@ -26,7 +26,7 @@ x011,...
 {
     processed-image: x011....
     waist-height-ratio: 0.43
-    hip-waist-ratio: 1.2
+    waist-hip-ratio: 1.2
 }
 ```
 
@@ -67,11 +67,11 @@ wait-watcher-bucket/
 ```
 {
     "bmi" : 23.01,
-    "hip-waist-ratio" : 1.2
-    "wait-height-ratio" : 0.45,
-    "face" : x011,x022..... (binary face image), 
-    "body" : x011,x022..... (binary body image),
+    "waist-hip-ratio" : 0.8
+    "waist-height-ratio" : 0.45,
+    "face-img" : x011,x022..... (binary face image), 
+    "body-img" : x011,x022..... (binary body image),
     "timestamp" : 2020-12-04 12:34:908Z,
-    "session-id" : uuid4 
+    "session-id" : str(uuid.uuid4())
 }
 ```

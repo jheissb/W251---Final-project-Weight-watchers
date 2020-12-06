@@ -55,6 +55,7 @@ def main():
         user_object['face-img'] = png_as_text
         user_object['bmi'] = 23.0
         user_object['waist-height-ratio'] = 0.47
+        user_object['waist-hip-ratio'] = 0.8
         user_object['keypoints'] = [1,2,3,4,5]
         user_object['body-img'] = png_as_text
         user_object['session-id'] =str(uuid.uuid4())

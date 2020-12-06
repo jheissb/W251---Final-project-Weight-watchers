@@ -5,6 +5,7 @@ import cv2
 from pose_detector import detect_pose
 from body_image import BodyImage
 from math import pi
+import json
 
 LOCAL_MQTT_HOST="172.18.0.2" 
 LOCAL_MQTT_PORT=1883
@@ -41,23 +42,28 @@ def calculate_ratio(img, keypoints):
     right_shoulder_points = np.asarray([round(keypoints[6][2] * w), round(keypoints[6][1] * h)])
     avg_shoulder = np.linalg.norm(right_shoulder_points-left_shoulder_points)
     avg_hip = np.linalg.norm(right_hip_points-left_hip_points)
-    avg_waist = pi * avg_hip
 
-    return round((avg_waist/avg_height),4)
+    avg_waist = pi * (avg_hip+avg_shoulder) / 2
+    waist_height_ratio = round((avg_waist/avg_height),4)
+    waist_hip_ratio = round((avg_waist/avg_hip),4)
+    return (waist_height_ratio,waist_hip_ratio)
   else:
-    return 0
+    return (0,0)
 
 def process_message(message):
   buff = np.fromstring(message.payload, np.uint8)
   buff = buff.reshape(1, -1)
   img = cv2.imdecode(buff, cv2.COLOR_BGR2RGB)
   orgimg, keypoints, processed_img = detect_pose(img)
-  ratio = 0
   if keypoints:
-    ratio = calculate_ratio(orgimg, keypoints[0])
-  body_image = BodyImage(message.payload, processed_img, ratio)
-  print(str(body_image.ratio))
-  publish_result(str(body_image.ratio))
+    waist_height_ratio,waist_hip_ratio  = calculate_ratio(orgimg, keypoints[0])
+  body_image = {}
+  _,png = cv2.imencode('.png', processed_img)
+  body_image['waist-hip-ratio'] = waist_hip_ratio
+  body_image['waist-height-ratio'] = waist_height_ratio
+  body_image['keypoints'] = keypoints
+  print(body_image['keypoints'])
+  publish_result(json.dumps(body_image, ensure_ascii=False, indent=4))
 
 mqttclient = mqtt.Client()
 mqttclient.on_connect = on_connect
