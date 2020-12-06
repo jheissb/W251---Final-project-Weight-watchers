@@ -79,7 +79,6 @@ def retrive_user_hitstorical_data_by_face_id(face_id):
             historical_object = {}
             historical_data = retrive_user_historical_data_by_date_and_face_id(key_object['Key'])
             historical_data = json.loads(historical_data)
-            print(historical_data)
             user_file_name = key_split[-1]
             historical_object['date']=user_file_name.split(".")[0]
             historical_object['bmi']=historical_data['bmi']

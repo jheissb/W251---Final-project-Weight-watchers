@@ -27,12 +27,17 @@ def recognit_face(new_img):
         result_list = face_recognition.compare_faces(encoding_list, new_face_encoding[0])
         find_face = [i for i, x in enumerate(result_list) if x]
         face_id = str(uuid.uuid4())
+        print("result_list " + result_list)
+        print("find_face " + find_face)
         if len(find_face) == 0: ## new face
+            print("new face" + face_id)
             save_face_data(new_img, face_id)
-        elif len(find_face) == 1:
+        else:
             index = find_face[0]
             face_id = existed_face__key_list[index]
+            face_id = face_id.split('/')[1].split('.')[0]
             save_face_data(new_img, face_id)
+            print("existed face " + face_id)
         print("face id " + face_id)
         return face_id
     except Exception as e:
