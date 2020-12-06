@@ -3,15 +3,11 @@ from datetime import datetime
 import json
 
 class BodyImage(object):
-    def __init__(self, raw_img, processed_img, ratio):
-        self.raw_img = raw_img
-        self.processed_img = processed_img
-        self.image_id = str(uuid.uuid4())
-        self.timestamp = datetime.now().strftime("%m-%d-%Y-%H-%M-%S")
-        self.ratio = ratio
-        #need to add timestamp
+    def __init__(self, processed_img, ratio):
+        self.processed-image = processed_img
+        self.waist-height-ratio = str(uuid.uuid4())
+        self.hip-waist-ratio = ratio
 
     def serializer(self):
-        print("get called")
         jsonStr = json.dumps(self.__dict__)
         return jsonStr

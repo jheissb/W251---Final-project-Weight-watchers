@@ -26,7 +26,7 @@ x011,...
 {
     processed-image: x011....
     waist-height-ratio: 0.43
-    hip-waist-ratio: 1.2
+    waist-hip-ratio: 1.2
 }
 ```
 
