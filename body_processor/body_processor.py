@@ -61,8 +61,8 @@ def process_message(message):
   _,png = cv2.imencode('.png', processed_img)
   body_image['waist-hip-ratio'] = waist_hip_ratio
   body_image['waist-height-ratio'] = waist_height_ratio
-  body_image['processed-image'] = png
-  print(body_image['waist-height-ratio'])
+  body_image['keypoints'] = keypoints
+  print(body_image['keypoints'])
   publish_result(json.dumps(body_image, ensure_ascii=False, indent=4))
 
 mqttclient = mqtt.Client()
