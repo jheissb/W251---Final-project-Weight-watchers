@@ -8,11 +8,8 @@ Topic:
   * imagedetection/bodyextractor  
   * imagedetection/faceextractor
 * for cloud container and edge to cloud communication: 
-  * imagedetection/bodyprocessor
-  * imagedetection/faceprocessor
-
-QoS:   
-* We chosed `at least once (1)`, assuming object duplication is not an issue but guarantee of delivery is required
+  * imagedetection/aggregator  
+  * imagedetection/historicaldata
 
 ## Image Capture & Processor
 There are 3 containers running on edge.  
@@ -78,4 +75,41 @@ python3 cam_body.py #for body
 #for testing purpose
 #docker run --name capture --network imgProcessor -ti imagecapture bash
 #python3 read_image.py 
+```
+
+## Image Aggregator on the cloud
+
+#### Step 0 -  start remote broker
+```
+#in ec2-container
+docker pull eclipse-mosquitto (https://hub.docker.com/_/eclipse-mosquitto?tab=description)
+docker run -it -p 1883:1883 eclipse-mosquitto
+```
+#### Step 1 -  start aggregator
+```
+#in ec2-container
+docker build -t aggregator -f Dockerfile .
+```
+
+#### Step 2 - Start aggregator
+```sh
+docker run --name aggregator -ti aggregator sh
+```
+
+after get into the shell:
+```sh
+python3 aggregator.py
+```
+
+Note:  
+for testing purpose, you can use two other terminal locally and run the following command:  
+terminal 1:   
+```sh
+#in aggregator/src/test_input.py
+python3 test_input.py
+```
+terminal 2:  
+```sh
+#in aggregator/src/test_output.py
+python3 test_output.py
 ```
