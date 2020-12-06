@@ -83,6 +83,7 @@ def retrive_user_hitstorical_data_by_face_id(face_id):
             historical_object['date']=user_file_name.split(".")[0]
             historical_object['bmi']=historical_data['bmi']
             historical_object['waist-height-ratio']=historical_data['waist-height-ratio']
+            historical_object['waist-hip-ratio']=historical_data['waist-hip-ratio']
             user_historical_data.append(historical_object)
         return user_historical_data
     except Exception as e:
