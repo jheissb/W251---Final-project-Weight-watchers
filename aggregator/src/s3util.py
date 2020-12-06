@@ -19,10 +19,11 @@ logger.setLevel(logging.INFO)
 
 credentials = json.load(open('aws_cred.json'))
 
-# s3_client = boto3.client('s3')
-s3_client = boto3.resource('s3',
+session = boto3.Session(
          aws_access_key_id=credentials['ACCESS_KEY_ID'],
          aws_secret_access_key=credentials['SECRET_ACCESS_KEY'])
+  
+s3_client = session.client('s3')
 
 S3_BUCKET_NAME='wait-watcher'
 S3_USER_HISTORICAL_FOLDER_NAME='user-historical-data'

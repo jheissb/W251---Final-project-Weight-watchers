@@ -26,10 +26,11 @@ RUN apt-get install -y --fix-missing \
     zip \
     && apt-get clean && rm -rf /tmp/* /var/tmp/*
 RUN pip3 install Cython
-RUN pip3 install numpy pandas glob3
+RUN pip3 install numpy pandas
 RUN pip3 install paho-mqtt
 RUN pip3 install sklearn
 RUN pip3 install scikit-learn
+RUN pip3 install boto3
 RUN cd ~ && \
     mkdir -p dlib && \
     git clone -b 'v19.9' --single-branch https://github.com/davisking/dlib.git dlib/ && \
@@ -39,3 +40,4 @@ RUN pip3 install face_recognition
 
 ADD src .
 ADD images images 
+COPY aws_cred.json aws_cred.json
