@@ -28,9 +28,10 @@ def on_message(client,userdata,msg):
     print(str(e))
 
 def publish(payload):
-    print(getsizeof(payload))
-    client.publish(REMOTE_MQTT_TOPIC, "test", qos=2, retain=False)
-    client.publish(REMOTE_MQTT_TOPIC, payload, qos=1, retain=False)
+    f = open("output.txt", "a")
+    f.write(payload)
+    f.close()
+    client.publish(REMOTE_MQTT_TOPIC, payload, qos=0, retain=False)
     print("Sent message to mosquitto")
 
 client = mqtt.Client()
@@ -55,7 +56,7 @@ def main():
         user_object['bmi'] = 23.0
         user_object['waist-height-ratio'] = 0.47
         user_object['keypoints'] = [1,2,3,4,5]
-        # user_object['body-img'] = png_as_text
+        user_object['body-img'] = png_as_text
         user_object['session-id'] =str(uuid.uuid4())
         print(type(user_object))
         publish(json.dumps(user_object, ensure_ascii=False, indent=4))

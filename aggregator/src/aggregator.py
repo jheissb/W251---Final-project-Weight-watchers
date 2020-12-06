@@ -22,11 +22,11 @@ REMOTE_MQTT_HITORICAL_DATA="imagedetection/historicaldata"
 
 def on_connect_remote(client, userdata, flags, rc):
   print("connected to remote broker with rc: " + str(rc))
-  client.subscribe(REMOTE_MQTT_TOPIC)
+  client.subscribe(REMOTE_MQTT_TOPIC, qos=0)
 	
 def on_message(client,userdata,msg):
+  print("message received!")	
   try:
-    print("message received!")	
     m_decode=str(msg.payload.decode("utf-8","ignore"))
     payload=json.loads(m_decode)
     aggregate_object(payload)
@@ -36,7 +36,7 @@ def on_message(client,userdata,msg):
     print(str(e))
   
 def publish_result(payload):
-  remote_mqttclient.publish(REMOTE_MQTT_HITORICAL_DATA, payload, qos=1, retain=False)
+  remote_mqttclient.publish(REMOTE_MQTT_HITORICAL_DATA, payload, qos=0, retain=False)
   print("Sent historical result to mosquitto")
 
 def aggregate_object(user_object):

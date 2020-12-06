@@ -10,7 +10,7 @@ REMOTE_MQTT_HITORICAL_DATA="imagedetection/historicaldata"
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
-    client.subscribe(REMOTE_MQTT_HITORICAL_DATA)
+    client.subscribe(REMOTE_MQTT_HITORICAL_DATA, qos=0)
 
 def on_message(client,userdata,msg):
   try:

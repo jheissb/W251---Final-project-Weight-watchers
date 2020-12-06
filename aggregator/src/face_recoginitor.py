@@ -27,8 +27,10 @@ def recognit_face(new_img):
         result_list = face_recognition.compare_faces(encoding_list, new_face_encoding[0])
         find_face = [i for i, x in enumerate(result_list) if x]
         face_id = str(uuid.uuid4())
-        print("result_list " + result_list)
-        print("find_face " + find_face)
+        print("result_list ")
+        print(result_list)
+        print("find_face ")
+        print(find_face)
         if len(find_face) == 0: ## new face
             print("new face" + face_id)
             save_face_data(new_img, face_id)
