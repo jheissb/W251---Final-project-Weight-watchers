@@ -40,7 +40,7 @@ def save_face_data(face_img, face_id):
         png_as_text = base64.b64encode(png).decode()
         key = S3_FACE_ID_KEY_FORMAT.format(id=face_id)
         s3_client.put_object(Bucket=S3_BUCKET_NAME, Key=key, Body=png_as_text)
-    except Exception as e:
+    except Exception as e: 
         logger.error("save_face_data")
         traceback.print_exc() 
 

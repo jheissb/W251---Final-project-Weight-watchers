@@ -6,11 +6,8 @@ Topic:
   * imagedetection/bodyextractor  
   * imagedetection/faceextractor
 * for cloud container and edge to cloud communication: 
-  * imagedetection/bodyprocessor
-  * imagedetection/faceprocessor
-
-QoS:   
-* Here, I choosed `at least once (1)`, I assume this is for business that does not worry about object duplication but want guarantee of delivery
+  * imagedetection/aggregator  
+  * imagedetection/historicaldata
 
 ## Image Capture & Processor
 There are 3 containers running on edge.  
@@ -99,4 +96,17 @@ docker run --name aggregator -ti aggregator sh
 after get into the shell:
 ```sh
 python3 aggregator.py
+```
+
+Note:  
+for testing purpose, you can use two other terminal locally and run the following command:  
+terminal 1:   
+```sh
+#in aggregator/src/test_input.py
+python3 test_input.py
+```
+terminal 2:  
+```sh
+#in aggregator/src/test_output.py
+python3 test_output.py
 ```
