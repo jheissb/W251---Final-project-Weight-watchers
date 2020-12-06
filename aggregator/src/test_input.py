@@ -12,9 +12,20 @@ REMOTE_MQTT_PORT=1883
 REMOTE_MQTT_TOPIC="imagedetection/aggregator"
 
 
+
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
     client.subscribe(REMOTE_MQTT_TOPIC)
+
+def on_message(client,userdata,msg):
+  try:
+    print("message received!")	
+    m_decode=str(msg.payload.decode("utf-8","ignore"))
+    payload=json.loads(m_decode)
+    print(payload)
+  except Exception as e:
+    print("error in on_message")
+    print(str(e))
 
 def publish(payload):
     sth = client.publish(REMOTE_MQTT_TOPIC, payload, qos=1, retain=False)
@@ -22,8 +33,8 @@ def publish(payload):
 
 client = mqtt.Client()
 client.on_connect = on_connect
+client.on_message = on_message
 client.connect(REMOTE_MQTT_HOST, REMOTE_MQTT_PORT, 60)
-
 
 def main():
     #Test
@@ -38,15 +49,14 @@ def main():
         user_object = {}
         png_as_text = base64.b64encode(png).decode()
         print(type(png_as_text))
-        user_object['bmi'] = 23.0
         user_object['face-img'] = png_as_text
-        user_object['wait-height-ratio'] = 0.47
+        user_object['bmi'] = str(23.0)
+        user_object['waist-height-ratio'] = str(0.47)
         user_object['keypoints'] = [1,2,3,4,5]
         # user_object['body-img'] = png_as_text
         user_object['session-id'] =str(uuid.uuid4())
         print(type(user_object))
         publish(json.dumps(user_object, ensure_ascii=False, indent=4))
-        publish("test")
             
 
 if __name__ == "__main__":

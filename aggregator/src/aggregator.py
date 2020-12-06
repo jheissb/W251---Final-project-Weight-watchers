@@ -8,6 +8,9 @@ import paho.mqtt.client as mqtt
 import os
 import io
 import json
+import base64
+import cv2
+import numpy as np
 from face_recoginitor import recognit_face
 from s3util import get_and_insurpt_user_data, retrive_user_hitstorical_data_by_face_id
 
@@ -26,11 +29,10 @@ def on_message(client,userdata,msg):
     print("message received!")	
     m_decode=str(msg.payload.decode("utf-8","ignore"))
     payload=json.loads(m_decode)
-    # buff = np.fromstring(message.payload, np.uint8)
-    # buff = buff.reshape(1, -1)
     aggregate_object(payload)
     print('finish aggregator')
   except Exception as e:
+    print("error in on_message")
     print(str(e))
   
 def publish_result(payload):
@@ -38,13 +40,18 @@ def publish_result(payload):
   print("Sent historical result to mosquitto")
 
 def aggregate_object(user_object):
-  face_id = recognit_face(user_object['face-img'])
+  face_img_string = user_object['face-img']
+  img_original = base64.b64decode(face_img_string)
+  img_as_np = np.frombuffer(img_original, dtype=np.uint8)
+  # img = cv2.imdecode(img_as_np, flags=1)
+  face_id = recognit_face(img_as_np)
+  print("got face id, start updating db")
   get_and_insurpt_user_data(user_object, face_id)
   historical_data = {}
+  print("finished updating, start getting historical data")
   historical_data['history'] = retrive_user_hitstorical_data_by_face_id(face_id)
   historical_data['session-id'] = user_object['session-id']
-  print(historical_data)
-  publish_result(historical_data)
+  publish_result(json.dumps(historical_data, ensure_ascii=False, indent=4))
 
 
 remote_mqttclient = mqtt.Client()
