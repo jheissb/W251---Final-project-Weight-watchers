@@ -13,5 +13,7 @@ RUN apt-get -y install python3-pyqt5
 COPY read_image.py read_image.py
 COPY cam.py cam.py
 COPY cam_body.py cam_body.py
-COPY GUI GUI
+ADD GUI GUI
 ADD images images 
+# CMD ["python3","GUI/wwatchers2.py"]
+ENTRYPOINT ["python3", "-u", "GUI/wwatchers2.py"]

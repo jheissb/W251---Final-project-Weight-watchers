@@ -42,3 +42,5 @@ RUN pip3 install face_recognition
 
 ADD src .
 ADD data data 
+# CMD ["main.py"]
+ENTRYPOINT ["python3","-u","main.py"]
