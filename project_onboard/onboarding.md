@@ -140,6 +140,7 @@ docker run --name aggregator -ti aggregator aggregator.py
 
 Note:  
 for testing purpose, you can use two other terminal locally and run the following command:  
+remember to update the topic name in aggregator and s3 bucket suffix with nonprod
 terminal 1:   
 ```sh
 #in aggregator/src/test_input.py
