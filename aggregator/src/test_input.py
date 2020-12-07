@@ -15,7 +15,7 @@ REMOTE_MQTT_TOPIC="imagedetection/aggregator"
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
-    client.subscribe(REMOTE_MQTT_TOPIC)
+    client.subscribe(REMOTE_MQTT_TOPIC, qos=0)
 
 def on_message(client,userdata,msg):
   try:
