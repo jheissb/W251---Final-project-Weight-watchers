@@ -23,7 +23,7 @@ class BodyImage(object):
         jsonStr = json.dumps(self.__dict__)
         return jsonStr
 
-LOCAL_MQTT_HOST=os.getenv('local_broker_ip')
+LOCAL_MQTT_HOST=os.getenv('local_broker_ip', "172.18.0.2")
 LOCAL_MQTT_PORT=1883
 LOCAL_MQTT_TOPIC="imagedetection/bodyextractor"
 LOCAL_MQTT_RESULT_TOPIC="imagedetection/bodyprocessor/result"
