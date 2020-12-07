@@ -104,10 +104,12 @@ class MyForm(QtWidgets.QMainWindow):
             print('ratios:',message)
             self.process_body_results(message)          
            
-    def process_body_results(msg)
+    def process_body_results(msg):
         msg_list=msg.split(',').strip()
+        print(msg_list)
         self.w2height_ratio=float(msg_list[0])
         self.w2hip_ratio=float(msg_list[1])
+        #draw points
         #left_eye_points=
         #left_eye_points,right_eye_points,left_ankle_points,
         #right_ankle_points,left_hip_points,right_hip_points,left_waist_points,right_waist_points)
