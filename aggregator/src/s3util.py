@@ -37,10 +37,11 @@ S3_USER_DATA_KEY_FORMAT=S3_USER_HISTORICAL_FOLDER_NAME+"/{id}/{year}-{month}-{da
 def save_face_data(face_img, face_id):
     try:
         _,png = cv2.imencode('.png', face_img)
-        png_as_text = base64.b64encode(png).decode()
+        img = io.BytesIO(png.tobytes())
+        img.seek(0)
         key = S3_FACE_ID_KEY_FORMAT.format(id=face_id)
-        s3_client.put_object(Bucket=S3_BUCKET_NAME, Key=key, Body=png_as_text)
-    except Exception as e: 
+        s3_client.put_object(Bucket=S3_BUCKET_NAME, Key=key, Body=img)
+    except Exception: 
         logger.error("save_face_data")
         traceback.print_exc() 
 
@@ -50,7 +51,7 @@ def get_and_insurpt_user_data(update_user_object, face_id):
         s3_key = S3_USER_DATA_KEY_FORMAT.format(id=face_id, year=now.year, month=now.month, day=now.day)
         logger.info("getting user object, user bmi :{}".format(update_user_object['bmi']))
         s3_client.put_object(Bucket=S3_BUCKET_NAME, Key=s3_key, Body=str(json.dumps(update_user_object)), ACL='public-read')
-    except Exception as e:
+    except Exception:
         logger.error("get_and_insurpt_user_data")
         traceback.print_exc()
 
@@ -63,7 +64,7 @@ def retrive_all_face_keys():
         for key_object in objects['Contents']:
             user_historical_data.append(key_object['Key'])
         return user_historical_data[1:]
-    except Exception as e:
+    except Exception:
         logger.error("retrive_all_face_keys")
         traceback.print_exc()
 
@@ -81,12 +82,12 @@ def retrive_user_hitstorical_data_by_face_id(face_id):
             historical_data = json.loads(historical_data)
             user_file_name = key_split[-1]
             historical_object['date']=user_file_name.split(".")[0]
-            historical_object['bmi']=historical_data['bmi']
-            historical_object['waist-height-ratio']=historical_data['waist-height-ratio']
-            historical_object['waist-hip-ratio']=historical_data['waist-hip-ratio']
+            historical_object['bmi']=historical_data['bmi'] if historical_data['bmi'] else 0
+            historical_object['waist-height-ratio']= historical_data['waist-height-ratio'] if historical_data['waist-height-ratio'] else 0
+            historical_object['waist-hip-ratio']=historical_data['waist-hip-ratio'] if historical_data['waist-hip-ratio'] else 0
             user_historical_data.append(historical_object)
         return user_historical_data
-    except Exception as e:
+    except Exception:
         logger.error("retrive_user_hitstorical_data_by_face_id")
         traceback.print_exc()
 
@@ -94,6 +95,6 @@ def retrive_user_historical_data_by_date_and_face_id(key):
     try:
         s3_object = s3_client.get_object(Bucket=S3_BUCKET_NAME, Key=key) 
         return s3_object["Body"].read().decode()
-    except Exception as e:
+    except Exception:
         logger.error("retrive_user_historical_data_by_date_and_face_id")
         traceback.print_exc()

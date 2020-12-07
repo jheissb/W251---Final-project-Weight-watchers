@@ -33,15 +33,14 @@ def recognit_face(new_img):
         print(find_face)
         if len(find_face) == 0: ## new face
             print("new face" + face_id)
-            save_face_data(new_img, face_id)
         else:
             index = find_face[0]
             face_id = existed_face__key_list[index]
             face_id = face_id.split('/')[1].split('.')[0]
-            save_face_data(new_img, face_id)
             print("existed face " + face_id)
+        save_face_data(new_img, face_id)
         print("face id " + face_id)
         return face_id
-    except Exception as e:
+    except Exception:
         print("recognit_face")
         traceback.print_exc() 
