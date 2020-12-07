@@ -18,58 +18,42 @@ One container would be the mosquitto broker that control the topic and communica
 One container would consume the images from webcam and process and send over to the cloud
 
 ### Install the prerequests:
-
-#### Install TRT_Pose 
-
-follow this article to install trt_pose on your jeston: [install jetson](https://spyjetson.blogspot.com/2019/12/jetsonnano-human-pose-estimation-using.html)  
-
-Or follow these instructions:
-```sh
-#Install pytorch
-wget https://nvidia.box.com/shared/static/wa34qwrwtk9njtyarwt5nvo6imenfy26.whl -O torch-1.7.0-cp36-cp36m-linux_aarch64.whl
-sudo apt-get install python3-pip libopenblas-base libopenmpi-dev 
-pip3 install Cython
-pip3 install numpy torch-1.7.0-cp36-cp36m-linux_aarch64.whl
-
-#install pillow  
-apt install libjpeg8-dev zlib1g-dev libtiff-dev libfreetype6 libfreetype6-dev libwebp-dev libopenjp2-7-dev libopenjp2-7-dev -y
-pip3 install pillow --global-option="build_ext" \
---global-option="--enable-zlib" \
---global-option="--enable-jpeg" \
---global-option="--enable-tiff" \
---global-option="--enable-freetype" \
---global-option="--enable-webp" \
---global-option="--enable-webpmux" \
---global-option="--enable-jpeg2000"
-
-#Install torchvision
-pip3 install torchvision 
-
-#Install torch2trt
-cd /usr/local/src
-sudo git clone https://github.com/NVIDIA-AI-IOT/torch2trt
-cd torch2trt
-sudo python3 setup.py install
-
-#Install program 
-pip3 install tqdm cython pycocotools
-sudo apt-get install python3-matplotlib
-cd /usr/local/src
-sudo git clone https://github.com/NVIDIA-AI-IOT/trt_pose
-cd trt_pose
-sudo python3 setup.py install
-
-#Model file is already in the body_processor folder
-
+Run the below command to install the prerequest:
 ```
-
-#### Install docker-compose
-
-follow this [guidance](https://blog.hypriot.com/post/nvidia-jetson-nano-install-docker-compose/)
+#if the file is unexcutable, run the below command first
+#chmod +x install_prerequest.sh 
+./install_prerequest.sh
+```
 
 ### Start scripts
+Run the below command to start the applications on jeston. 
 ```
+#if the file is unexcutable, run the below command first
+#chmod +x start.sh 
 ./start.sh
 ```
+What it would do is: 
+* running command to prepared the environment for the application 
+* running docker compose up to get dockerize component up 
+* running trt_pose detection on jetson directly for body_processor
+
+### Debugging issue
+If you running into camera cannot open issue, make sure you mapped the correct camera to the index 0. 
+```
+imagecapture.devices: "/dev/video{replace_with_the_correct_index}:/dev/video0"
+```
+
+To check the logs for docker containers:
+```
+#in the project root directory
+docker-compose logs
+```
+
+To bring down the docker containers"
+```
+#in the project root directory
+docker-compose down 
+```
+
 
 
