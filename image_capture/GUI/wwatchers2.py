@@ -55,8 +55,6 @@ class MyForm(QtWidgets.QMainWindow):
         self.stream_body=False
         self.image_face=[]
         self.image_body=[]
-        self.w2hip_ratio=0
-        self.w2height_ratio=0
         self.client = mqtt.Client()
         self.client.on_connect = self.on_connect
         self.client.on_disconnect = self.on_disconnect
@@ -102,11 +100,19 @@ class MyForm(QtWidgets.QMainWindow):
             self.ui.bmi_tag.setText('BMI= '+BMI)
             self.BMI=float(BMI)
         if msg.topic == LOCAL_MQTT_BODY_RESULT_TOPIC: 
-            print('ratios:',msg.payload.decode("utf-8"))           
-            #print('bmi message=',BMI)
-            #self.ui.bmi_tag.setText('BMI= '+BMI)
-            #self.BMI=float(BMI)
-
+            message=msg.payload.decode("utf-8")
+            print('ratios:',message)
+            self.process_body_results(message)          
+           
+    def process_body_results(msg)
+        msg_list=msg.split(',').strip()
+        self.w2height_ratio=float(msg_list[0])
+        self.w2hip_ratio=float(msg_list[1])
+        #left_eye_points=
+        #left_eye_points,right_eye_points,left_ankle_points,
+        #right_ankle_points,left_hip_points,right_hip_points,left_waist_points,right_waist_points)
+        #w_coord=
+    
     # start/stop timer
     def controlTimer(self):
         # if timer is stopped

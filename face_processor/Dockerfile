@@ -4,6 +4,7 @@ LABEL name="faceprocessor"
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
 RUN apt install -y python3-dev python3-pip  python3-opencv vim-tiny  libopencv-dev
+RUN pip3 install --upgrade pip
 RUN apt-get install -y --fix-missing \
     build-essential \
     cmake \
@@ -26,7 +27,9 @@ RUN apt-get install -y --fix-missing \
     zip \
     && apt-get clean && rm -rf /tmp/* /var/tmp/*
 RUN pip3 install Cython
-RUN pip3 install numpy pandas glob3
+RUN pip3 install numpy 
+RUN pip3 install pandas 
+#RUN pip3 install glob3
 RUN pip3 install paho-mqtt
 RUN pip3 install sklearn
 RUN pip3 install scikit-learn

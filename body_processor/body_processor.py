@@ -3,9 +3,24 @@ import paho.mqtt.publish as publish
 import numpy as np
 import cv2
 from pose_detector import detect_pose
-from body_image import BodyImage
 from math import pi
 import json
+import uuid
+from datetime import datetime
+
+class BodyImage(object):
+    def __init__(self, raw_img, processed_img, ratio):
+        self.raw_img = raw_img
+        self.processed_img = processed_img
+        self.image_id = str(uuid.uuid4())
+        self.timestamp = datetime.now().strftime("%m-%d-%Y-%H-%M-%S")
+        self.ratio = ratio
+        #need to add timestamp
+
+    def serializer(self):
+        print("get called")
+        jsonStr = json.dumps(self.__dict__)
+        return jsonStr
 
 LOCAL_MQTT_HOST="172.18.0.2" 
 LOCAL_MQTT_PORT=1883
@@ -34,21 +49,24 @@ def calculate_ratio(img, keypoints):
     right_ankle_points = np.asarray([round(keypoints[16][2] * w), round(keypoints[16][1] * h)])
     left_height = np.linalg.norm(left_ankle_points-left_eye_points)
     right_height = np.linalg.norm(right_ankle_points-right_eye_points)
-    avg_height = (left_height + right_height) / 2
+    avg_height = 1.1*(left_height + right_height) / 2 #add 10% to compensate for eyes and ankles not been at the top and bottom.
 
     left_hip_points = np.asarray([round(keypoints[11][2] * w), round(keypoints[11][1] * h)])
-    right_hip_points = np.asarray([round(keypoints[12][2] * w), round(keypoints[12][1] * h)])
+    right_hip_points = np.asarray([round(keypoints[12][2] * w), round(keypoints[12][1] * h)])  
     left_shoulder_points = np.asarray([round(keypoints[5][2] * w), round(keypoints[5][1] * h)])
     right_shoulder_points = np.asarray([round(keypoints[6][2] * w), round(keypoints[6][1] * h)])
-    avg_shoulder = np.linalg.norm(right_shoulder_points-left_shoulder_points)
+    #estimating waist as midpoint between hip and shoulder
+    left_waist_points =(left_hip_points+left_shoulder_points)/2
+    right_waist_points =(right_hip_points+right_shoulder_points)/2
+    #avg_shoulder = np.linalg.norm(right_shoulder_points-left_shoulder_points)
     avg_hip = np.linalg.norm(right_hip_points-left_hip_points)
-
-    avg_waist = pi * (avg_hip+avg_shoulder) / 2
-    waist_height_ratio = round((avg_waist/avg_height),4)
+    avg_waist = np.linalg.norm(right_hip_points-left_hip_points)
+    waist_height_ratio = round((pi*avg_waist/avg_height),4)
     waist_hip_ratio = round((avg_waist/avg_hip),4)
-    return (waist_height_ratio,waist_hip_ratio)
+    return (waist_height_ratio,waist_hip_ratio,left_eye_points,right_eye_points,left_ankle_points,
+        right_ankle_points,left_hip_points,right_hip_points,left_waist_points,right_waist_points)
   else:
-    return (0,0)
+    return None
 
 def process_message(message):
   buff = np.fromstring(message.payload, np.uint8)

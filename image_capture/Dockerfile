@@ -7,8 +7,11 @@ RUN apt install -y python3-dev python3-pip  python3-opencv vim-tiny  libopencv-d
 RUN pip3 install Cython
 RUN pip3 install numpy
 RUN pip3 install paho-mqtt
+RUN apt-get -y install python3-matplotlib
+RUN apt-get -y install python3-pyqt5
 # example from https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_gui/py_video_display/py_video_display.html
 COPY read_image.py read_image.py
 COPY cam.py cam.py
 COPY cam_body.py cam_body.py
+COPY GUI GUI
 ADD images images 
