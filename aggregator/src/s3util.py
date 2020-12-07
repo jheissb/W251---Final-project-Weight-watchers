@@ -28,7 +28,7 @@ session = boto3.Session(
   
 s3_client = session.client('s3')
 
-S3_BUCKET_NAME='wait-watcher-nonprod'
+S3_BUCKET_NAME='wait-watcher'
 S3_USER_HISTORICAL_FOLDER_NAME='user-historical-data'
 S3_FACE_ID_FOLDER_NAME='face-id'
 S3_FACE_ID_KEY_FORMAT=S3_FACE_ID_FOLDER_NAME+"/{id}.png"

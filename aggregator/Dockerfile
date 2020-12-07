@@ -41,3 +41,5 @@ RUN pip3 install face_recognition
 ADD src .
 ADD images images 
 COPY aws_cred.json aws_cred.json
+CMD ["aggregator.py"]
+ENTRYPOINT ["python3"]
