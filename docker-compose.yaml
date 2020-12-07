@@ -19,8 +19,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-    devices:
-      - "/dev/video0:/dev/video0"
+    # devices:
+    #   - "/dev/video0:/dev/video0"
     command: ["--privileged"]
   faceprocessor:
     environment:
