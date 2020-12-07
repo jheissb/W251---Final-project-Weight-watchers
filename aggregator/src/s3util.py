@@ -28,7 +28,7 @@ session = boto3.Session(
   
 s3_client = session.client('s3')
 
-S3_BUCKET_NAME='wait-watcher'
+S3_BUCKET_NAME='wait-watcher-nonprod'
 S3_USER_HISTORICAL_FOLDER_NAME='user-historical-data'
 S3_FACE_ID_FOLDER_NAME='face-id'
 S3_FACE_ID_KEY_FORMAT=S3_FACE_ID_FOLDER_NAME+"/{id}.png"
@@ -78,7 +78,7 @@ def retrive_user_hitstorical_data_by_face_id(face_id):
         for key_object in objects['Contents']:
             key_split = key_object['Key'].split("/")
             historical_object = {}
-            historical_data = retrive_user_historical_data_by_date_and_face_id(key_object['Key'])
+            historical_data = retrive_data_by_key(key_object['Key']).decode()
             historical_data = json.loads(historical_data)
             user_file_name = key_split[-1]
             historical_object['date']=user_file_name.split(".")[0]
@@ -91,10 +91,10 @@ def retrive_user_hitstorical_data_by_face_id(face_id):
         logger.error("retrive_user_hitstorical_data_by_face_id")
         traceback.print_exc()
 
-def retrive_user_historical_data_by_date_and_face_id(key):
+def retrive_data_by_key(key):
     try:
         s3_object = s3_client.get_object(Bucket=S3_BUCKET_NAME, Key=key) 
-        return s3_object["Body"].read().decode()
+        return s3_object["Body"].read()
     except Exception:
         logger.error("retrive_user_historical_data_by_date_and_face_id")
         traceback.print_exc()
