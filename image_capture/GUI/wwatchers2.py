@@ -21,7 +21,7 @@ from PyQt5.QtCore import QTimer
 #set this to the right camera input
 CAM_INPUT=0
 #Constants
-LOCAL_MQTT_HOST="processorbroker"
+LOCAL_MQTT_HOST="imageprocessorbroker"
 LOCAL_MQTT_PORT=1883
 #Face and Body images
 LOCAL_FACE_MQTT_TOPIC="imagedetection/faceextractor"

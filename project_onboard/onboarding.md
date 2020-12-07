@@ -112,7 +112,8 @@ docker run --name capture --network imgProcessor --privileged -e DISPLAY=$DISPLA
 ```
 
 ## Image Aggregator on the cloud
-
+Note: you don't need to run the following command as aggregator has already been deployed.  
+This is for documentation only
 #### Step 0 -  start remote broker
 ```
 #in ec2-container
@@ -145,3 +146,6 @@ terminal 2:
 #in aggregator/src/test_output.py
 python3 test_output.py
 ```
+
+#docker-compose installation
+https://blog.hypriot.com/post/nvidia-jetson-nano-install-docker-compose/

@@ -7,6 +7,7 @@ from math import pi
 import json
 import uuid
 from datetime import datetime
+import os 
 
 class BodyImage(object):
     def __init__(self, raw_img, processed_img, ratio):
@@ -22,7 +23,7 @@ class BodyImage(object):
         jsonStr = json.dumps(self.__dict__)
         return jsonStr
 
-LOCAL_MQTT_HOST="172.18.0.2" 
+LOCAL_MQTT_HOST=os.getenv('local_broker_ip', "172.18.0.2")
 LOCAL_MQTT_PORT=1883
 LOCAL_MQTT_TOPIC="imagedetection/bodyextractor"
 LOCAL_MQTT_RESULT_TOPIC="imagedetection/bodyprocessor/result"

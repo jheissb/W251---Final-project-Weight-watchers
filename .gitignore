@@ -2,3 +2,4 @@
 .DS_Store
 .idea
 */aws_cred.json
+*/__pycache__
