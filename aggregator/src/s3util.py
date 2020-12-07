@@ -32,7 +32,7 @@ S3_BUCKET_NAME='wait-watcher'
 S3_USER_HISTORICAL_FOLDER_NAME='user-historical-data'
 S3_FACE_ID_FOLDER_NAME='face-id'
 S3_FACE_ID_KEY_FORMAT=S3_FACE_ID_FOLDER_NAME+"/{id}.png"
-S3_USER_DATA_KEY_FORMAT=S3_USER_HISTORICAL_FOLDER_NAME+"/{id}/{year}-{month}-{day}.json"
+S3_USER_DATA_KEY_FORMAT=S3_USER_HISTORICAL_FOLDER_NAME+"/{id}/{datetime}.json"
 
 def save_face_data(face_img, face_id):
     try:
@@ -47,8 +47,8 @@ def save_face_data(face_img, face_id):
 
 def get_and_insurpt_user_data(update_user_object, face_id):
     try:
-        now = datetime.now() # current date and time
-        s3_key = S3_USER_DATA_KEY_FORMAT.format(id=face_id, year=now.year, month=now.month, day=now.day)
+        now = update_user_object['timestamp']
+        s3_key = S3_USER_DATA_KEY_FORMAT.format(id=face_id, datetime=now)
         logger.info("getting user object, user bmi :{}".format(update_user_object['bmi']))
         s3_client.put_object(Bucket=S3_BUCKET_NAME, Key=s3_key, Body=str(json.dumps(update_user_object)), ACL='public-read')
     except Exception:

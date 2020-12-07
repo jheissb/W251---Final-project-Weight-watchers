@@ -6,12 +6,13 @@ import json
 import uuid
 import base64
 from sys import getsizeof
+from datetime import datetime
 
 
 
 REMOTE_MQTT_HOST="44.233.34.126"
 REMOTE_MQTT_PORT=1883
-REMOTE_MQTT_TOPIC="imagedetection/aggregator"
+REMOTE_MQTT_TOPIC="imagedetection/aggregator/nonprod"
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -59,6 +60,7 @@ def main():
         user_object['keypoints'] = [1,2,3,4,5]
         user_object['body-img'] = png_as_text
         user_object['session-id'] =str(uuid.uuid4())
+        user_object['timestamp']=datetime.now().strftime("%m-%d-%Y-%H-%M-%S")
         print(type(user_object))
         publish(json.dumps(user_object, ensure_ascii=False, indent=4))
             
