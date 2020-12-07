@@ -69,13 +69,7 @@ follow this [guidance](https://blog.hypriot.com/post/nvidia-jetson-nano-install-
 
 ### Start scripts
 ```
-#in directory /body_processor
-python3 body_processor.py
-
-# in root directly 
-xhost+
-docker-compose up -d
-
+./start.sh
 ```
 
 
