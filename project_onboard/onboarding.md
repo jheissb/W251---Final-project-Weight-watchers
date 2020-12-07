@@ -146,3 +146,6 @@ terminal 2:
 #in aggregator/src/test_output.py
 python3 test_output.py
 ```
+
+#docker-compose installation
+https://blog.hypriot.com/post/nvidia-jetson-nano-install-docker-compose/

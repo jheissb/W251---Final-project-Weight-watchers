@@ -13,9 +13,15 @@ services:
   imagecapture:
     environment:
       - PYTHONUNBUFFERED=1
+      - DISPLAY=$DISPLAY
     build: 
       context: ./image_capture
       dockerfile: Dockerfile
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    devices:
+      - "/dev/video2:/dev/video2"
+    command: ["--privileged"]
   faceprocessor:
     environment:
       - PYTHONUNBUFFERED=1
