@@ -105,16 +105,10 @@ sudo python3 setup.py install
 python3 body_processor.py
 ```
 
-#### Step 3 - Start image capture with network
+#### Step 3 - Start GUI for image capture with network
 ```sh
 xhost +
-docker run --name capture --network imgProcessor --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -ti imagecapture bash
-python3 cam.py #for face
-python3 cam_body.py #for body
-
-#for testing purpose
-#docker run --name capture --network imgProcessor -ti imagecapture bash
-#python3 read_image.py 
+docker run --name capture --network imgProcessor --privileged -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -ti imagecapture python3 GUI/wwatchers2.py
 ```
 
 ## Image Aggregator on the cloud
