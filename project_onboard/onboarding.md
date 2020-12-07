@@ -123,26 +123,24 @@ python3 cam_body.py #for body
 ```
 #in ec2-container
 docker pull eclipse-mosquitto (https://hub.docker.com/_/eclipse-mosquitto?tab=description)
-docker run -it -p 1883:1883 eclipse-mosquitto
+screen docker run -it -p 1883:1883 eclipse-mosquitto
 ```
 #### Step 1 -  start aggregator
 ```
 #in ec2-container
+#aggregator
 docker build -t aggregator -f Dockerfile .
 ```
 
 #### Step 2 - Start aggregator
 ```sh
-docker run --name aggregator -ti aggregator sh
-```
-
-after get into the shell:
-```sh
-python3 aggregator.py
+screen 
+docker run --name aggregator -ti aggregator aggregator.py
 ```
 
 Note:  
 for testing purpose, you can use two other terminal locally and run the following command:  
+remember to update the topic name in aggregator and s3 bucket suffix with nonprod
 terminal 1:   
 ```sh
 #in aggregator/src/test_input.py

@@ -6,7 +6,7 @@ import base64
 
 REMOTE_MQTT_HOST="44.233.34.126"
 REMOTE_MQTT_PORT=1883
-REMOTE_MQTT_HITORICAL_DATA="imagedetection/historicaldata"
+REMOTE_MQTT_HITORICAL_DATA="imagedetection/historicaldata/nonprod"
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
