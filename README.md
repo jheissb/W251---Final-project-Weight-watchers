@@ -20,4 +20,4 @@ Our goal is to provide accurate information to stake holders (school principal, 
 
 ## Approach:
 A database manager running in the cloud or locally in the Nvidia Jetson NX reads images, identify new vs existing records and executes the obesity risk assesment program which combines a BMI esitmation from a face image with anatomical measurements performed from stereo imaging using regression.
-![framework](resources/readme_images/framework2.png)
+![framework](framework2.png)
