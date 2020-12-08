@@ -14,6 +14,8 @@ import time
 import queue
 import paho.mqtt.client as mqtt
 import os
+import json
+import PIL.Image, PIL.ImageDraw
 
 from PyQt5.QtGui import QImage
 from PyQt5.QtGui import QPixmap
@@ -35,7 +37,20 @@ REMOTE_MQTT_HOST="44.233.34.126"
 REMOTE_MQTT_PORT=1883
 REMOTE_MQTT_TOPIC="imagedetection/aggregator"
 REMOTE_MQTT_HITORICAL_DATA="imagedetection/historicaldata"
-
+def draw_point(x,y,img):
+    thickness = 5
+    height, width, channel = img.shape
+    #draw = PIL.ImageDraw.Draw(img)
+    #draw.line([ int(x)-1,int(y),int(x)+1,int(y)],width = thickness,fill=(51,51,204))
+    for xi in range (thickness):
+        for yi in range (thickness):
+            img[int(x)-xi+2,int(y)-yi+2]=200
+    img[int(x)-1,int(y)]=0
+    img[int(x)+1,int(y)]=0
+    img[int(x),int(y)]=0
+    img[int(x),int(y)-1]=0
+    img[int(x),int(y)+1]=0    
+    return(img)
 class MyForm(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -75,7 +90,12 @@ class MyForm(QtWidgets.QMainWindow):
         #self.timer.stop()
         self.controlTimer()
         self.close()
+
     
+
+
+
+
     def on_connect(self,client, userdata, flags, rc):
         #subscribe to topics 
         print("Connected with result code "+str(rc))
@@ -100,21 +120,34 @@ class MyForm(QtWidgets.QMainWindow):
             self.ui.bmi_tag.setText('BMI= '+BMI)
             self.BMI=float(BMI)
         if msg.topic == LOCAL_MQTT_BODY_RESULT_TOPIC: 
-            message=msg.payload.decode("utf-8")
-            print('ratios:',message)
-            self.process_body_results(message)          
+            #try:
+            m_decode=str(msg.payload.decode("utf-8"))
+            pose=json.loads(m_decode)
+            print(pose)
+            self.process_body_results(pose)
+            #except Exception as e:
+            #    print("error in on_message")
+            #    print(str(e))                    
            
-    def process_body_results(msg):
-        msg_list=msg.split(',').strip()
-        print(msg_list)
-        self.w2height_ratio=float(msg_list[0])
-        self.w2hip_ratio=float(msg_list[1])
-        #draw points
-        #left_eye_points=
-        #left_eye_points,right_eye_points,left_ankle_points,
-        #right_ankle_points,left_hip_points,right_hip_points,left_waist_points,right_waist_points)
-        #w_coord=
-    
+    def process_body_results(self,msg):
+        self.w2height_ratio=float(msg['waist-height-ratio'])
+        self.w2hip_ratio=float(msg['waist-hip-ratio'])
+        self.ui.w2height_label.setText('Waist-to-height ratio:'+str(self.w2height_ratio))
+        self.ui.w2hip_label.setText('Waist-to-hip ratio:'+str(self.w2hip_ratio))
+        for p in msg['keypoints']:
+            self.image_body=draw_point(p[1],p[0],self.image_body)
+        height, width, channel = self.image_body.shape
+        ratio=self.ui.label_3.geometry().height()/height
+        image = cv2.resize(self.image_body, (int(width*ratio), self.ui.face.geometry().height()))
+        # get image infos
+        height, width, channel = image.shape
+        step = channel * width
+        # create and store QImage from image
+        self.qImgb = QImage(image.data, width, height, step, QImage.Format_RGB888)
+        # show image in img_label
+        self.ui.label_3.setPixmap(QPixmap.fromImage(self.qImgb))
+        self.ui.text_output.setText("Press submit data/n or retake pictures ")
+
     # start/stop timer
     def controlTimer(self):
         # if timer is stopped
@@ -144,7 +177,7 @@ class MyForm(QtWidgets.QMainWindow):
         if self.ui.delay.isChecked():
             for i in range(150):
                 self.show_body_cam()
-                time.sleep(0.02)
+                time.sleep(0.01)
                 QtWidgets.QApplication.processEvents() 
         self.image_body=self.imagebo
         self.ui.text_output.setText('Sending body image')
@@ -201,6 +234,7 @@ class MyForm(QtWidgets.QMainWindow):
         height, width, channel = image.shape
         ratio=self.ui.face.geometry().width()/width
         image = cv2.resize(image, (self.ui.face.geometry().width(), int(height*ratio)))
+        print(type(image))
         # get image infos
         height, width, channel = image.shape
         step = channel * width
@@ -213,12 +247,12 @@ class MyForm(QtWidgets.QMainWindow):
     def show_body_cam(self):
         ret, image = self.cap.read()
         # convert image to RGB format
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        imagec = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         #store current image object
-        self.imagebo=image
-        height, width, channel = image.shape
+        self.imagebo=imagec
+        height, width, channel = imagec.shape
         ratio=self.ui.label_3.geometry().height()/height
-        image = cv2.resize(image, (int(width*ratio), self.ui.face.geometry().height()))
+        image = cv2.resize(imagec, (int(width*ratio), self.ui.face.geometry().height()))
         # get image infos
         height, width, channel = image.shape
         step = channel * width
