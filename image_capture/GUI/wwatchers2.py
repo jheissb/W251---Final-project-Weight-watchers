@@ -16,6 +16,11 @@ import paho.mqtt.client as mqtt
 import os
 import json
 import PIL.Image, PIL.ImageDraw
+import base64
+import uuid
+from datetime import datetime
+import matplotlib
+matplotlib.use('Qt5Agg')
 
 from PyQt5.QtGui import QImage
 from PyQt5.QtGui import QPixmap
@@ -23,7 +28,7 @@ from PyQt5.QtCore import QTimer
 #set this to the right camera input
 CAM_INPUT=0
 #Constants
-LOCAL_MQTT_HOST="imageprocessorbroker"
+LOCAL_MQTT_HOST=os.getenv('local_broker_ip', "172.18.0.2")#"imageprocessorbroker"
 LOCAL_MQTT_PORT=1883
 #Face and Body images
 LOCAL_FACE_MQTT_TOPIC="imagedetection/faceextractor"
@@ -36,7 +41,7 @@ LOCAL_MQTT_BODY_RESULT_TOPIC="imagedetection/bodyprocessor/result"
 REMOTE_MQTT_HOST="44.233.34.126"
 REMOTE_MQTT_PORT=1883
 REMOTE_MQTT_TOPIC="imagedetection/aggregator"
-REMOTE_MQTT_HITORICAL_DATA="imagedetection/historicaldata"
+REMOTE_MQTT_HISTORICAL_DATA="imagedetection/historicaldata"
 def draw_point(x,y,img):
     thickness = 5
     height, width, channel = img.shape
@@ -66,6 +71,9 @@ class MyForm(QtWidgets.QMainWindow):
         self.ui.submit_btn.clicked.connect(self.submit_data)
         self.ui.quit_btn.clicked.connect(self.quitf)
         self.face_size=self.ui.face.size()
+        self.ui.text_output.setWordWrap(True) 
+        #self.ui.history_plot.canvas.axes.axis('off')
+
         self.stream_face=True
         self.stream_body=False
         self.image_face=[]
@@ -75,8 +83,14 @@ class MyForm(QtWidgets.QMainWindow):
         self.client.on_disconnect = self.on_disconnect
         self.client.connect(LOCAL_MQTT_HOST, LOCAL_MQTT_PORT, 60)
         self.client.on_message = self.on_message
+        self.client2 = mqtt.Client()
+        self.client2.on_connect = self.on_connect2
+        self.client2.on_disconnect = self.on_disconnect2
+        self.client2.connect(REMOTE_MQTT_HOST, REMOTE_MQTT_PORT, 60)
+        self.client2.on_message = self.on_message2
         self.BMI=0        
         self.client.loop_start()
+        self.client2.loop_start()
         
         # create a timer
         self.timer = QTimer()
@@ -91,32 +105,35 @@ class MyForm(QtWidgets.QMainWindow):
         self.controlTimer()
         self.close()
 
-    
-
-
-
+    def on_connect2(self,client, userdata, flags, rc):
+        #subscribe to topics 
+        print("Connected to remote server with result code "+str(rc))
+        self.client2.subscribe(REMOTE_MQTT_HISTORICAL_DATA)
 
     def on_connect(self,client, userdata, flags, rc):
         #subscribe to topics 
         print("Connected with result code "+str(rc))
         self.client.subscribe(LOCAL_MQTT_FACE_RESULT_TOPIC)
         self.client.subscribe(LOCAL_MQTT_BODY_RESULT_TOPIC)
-        self.client.subscribe(REMOTE_MQTT_HITORICAL_DATA)
+        #self.client.subscribe(REMOTE_MQTT_HITORICAL_DATA)
 
     def on_disconnect(self,client, userdata,rc=0):
         self.client.loop_stop()
+    def on_disconnect2(self,client, userdata,rc=0):
+        self.client2.loop_stop()
     def publish_face(self,payload):
         self.client.publish(LOCAL_FACE_MQTT_TOPIC, payload, qos=1, retain=False)
+        print('face published')
     def publish_body(self,payload):
         self.client.publish(LOCAL_BODY_MQTT_TOPIC, payload, qos=1, retain=False)
 
     def on_message(self,client,userdata, msg):
-        if msg.topic == REMOTE_MQTT_HITORICAL_DATA: 
-            self.process_historical_data(msg.payload)
+        #if msg.topic == REMOTE_MQTT_HITORICAL_DATA: 
+        #    self.process_historical_data(msg.payload)
         if msg.topic == LOCAL_MQTT_FACE_RESULT_TOPIC: 
             BMI=msg.payload.decode("utf-8") #.decode("ascii")
             BMI=BMI[0:5]            
-            #print('bmi message=',BMI)
+            print('bmi message=',BMI)
             self.ui.bmi_tag.setText('BMI= '+BMI)
             self.BMI=float(BMI)
         if msg.topic == LOCAL_MQTT_BODY_RESULT_TOPIC: 
@@ -128,12 +145,47 @@ class MyForm(QtWidgets.QMainWindow):
             #except Exception as e:
             #    print("error in on_message")
             #    print(str(e))                    
-           
+    def on_message2(self,client,userdata, msg):
+        print('Got a message from cloud server')
+        if msg.topic == REMOTE_MQTT_HISTORICAL_DATA: 
+            #try:
+            print('Reading historical data...')
+            m_decode=str(msg.payload.decode("utf-8"))
+            hdata=json.loads(m_decode)
+            #reading list of dictionaries with date, bmi, w2height ratio and w2hip ratio
+            list_d = hdata['history']
+            self.ssid=hdata['session-id']
+            dates_l=[]
+            bmi_l=[]
+            w2height_l=[]
+            w2hip_l=[]
+            for d in list_d:
+                dates_l.append(d['date'].rsplit('-',1)[0]) #removing seconds
+                bmi_l.append(d['bmi'])
+                w2height_l.append(d['waist-height-ratio'])
+                w2hip_l.append(d['waist-hip-ratio'])
+            #self.ui.history_plot.canvas.axes.axis('on')
+            self.ui.history_plot.canvas.axes.plot(dates_l,bmi_l,'o-',label='BMI')
+            self.ui.history_plot.canvas.axes.plot(dates_l,w2height_l,'o-',label='W2Height')
+            self.ui.history_plot.canvas.axes.plot(dates_l,w2hip_l,'o-',label='W2Hip')
+            self.ui.history_plot.canvas.axes.legend()
+            self.ui.history_plot.canvas.draw()
+            
+        #QtWidgets.QApplication.processEvents() 
+
+            
+            
+                
+                
+                
+            #self.client2.loop_stop()
+       
     def process_body_results(self,msg):
         self.w2height_ratio=float(msg['waist-height-ratio'])
         self.w2hip_ratio=float(msg['waist-hip-ratio'])
         self.ui.w2height_label.setText('Waist-to-height ratio:'+str(self.w2height_ratio))
         self.ui.w2hip_label.setText('Waist-to-hip ratio:'+str(self.w2hip_ratio))
+        self.keypoints=msg['keypoints']
         for p in msg['keypoints']:
             self.image_body=draw_point(p[1],p[0],self.image_body)
         height, width, channel = self.image_body.shape
@@ -146,7 +198,7 @@ class MyForm(QtWidgets.QMainWindow):
         self.qImgb = QImage(image.data, width, height, step, QImage.Format_RGB888)
         # show image in img_label
         self.ui.label_3.setPixmap(QPixmap.fromImage(self.qImgb))
-        self.ui.text_output.setText("Press submit data/n or retake pictures ")
+        self.ui.text_output.setText("Press submit data\n or retake pictures ")
 
     # start/stop timer
     def controlTimer(self):
@@ -175,7 +227,7 @@ class MyForm(QtWidgets.QMainWindow):
     
     def take_body_picture(self):
         if self.ui.delay.isChecked():
-            for i in range(150):
+            for i in range(70):
                 self.show_body_cam()
                 time.sleep(0.01)
                 QtWidgets.QApplication.processEvents() 
@@ -201,8 +253,22 @@ class MyForm(QtWidgets.QMainWindow):
     #    self.BMI=msg
 
     def submit_data(self):
-        #send messages to cloud
-        self.client.loop_stop()   
+        _,img_face = cv2.imencode('.png', self.image_face)
+        png_face_as_text = base64.b64encode(img_face).decode()
+        _,img_body = cv2.imencode('.png', self.image_body)
+        png_body_as_text = base64.b64encode(img_body).decode()
+        user_object = {}
+        user_object['face-img'] = png_face_as_text
+        user_object['bmi'] = self.BMI
+        user_object['waist-height-ratio'] = self.w2height_ratio
+        user_object['waist-hip-ratio'] = self.w2hip_ratio
+        user_object['keypoints'] = self.keypoints
+        user_object['body-img'] = png_body_as_text
+        user_object['session-id'] =str(uuid.uuid4())
+        user_object['timestamp']=datetime.now().strftime("%m-%d-%Y-%H-%M-%S")
+        payload=json.dumps(user_object, ensure_ascii=False, indent=4)
+        self.client2.publish(REMOTE_MQTT_TOPIC, payload, qos=0, retain=False)
+        self.ui.text_output.setText("Data sent to cloud.\n Receiving history")
 
     def take_face_picture(self):
         """takes picture of face from webcam:
@@ -217,7 +283,7 @@ class MyForm(QtWidgets.QMainWindow):
         msg = png.tostring()
         self.publish_face(msg)
         print("Sent detected face to mosquitto")
-        self.client.on_message = self.on_message
+        #self.client.on_message = self.on_message
 
     def retake_face_picture(self):
         self.stream_face=True
@@ -234,7 +300,6 @@ class MyForm(QtWidgets.QMainWindow):
         height, width, channel = image.shape
         ratio=self.ui.face.geometry().width()/width
         image = cv2.resize(image, (self.ui.face.geometry().width(), int(height*ratio)))
-        print(type(image))
         # get image infos
         height, width, channel = image.shape
         step = channel * width
