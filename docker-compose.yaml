@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  imageprocessorbroker:
+    environment:
+      - PYTHONUNBUFFERED=1
+    build: 
+      context: ./image_processor_broker
+      dockerfile: Dockerfile
+    expose: 
+      - 1883
+    ports:
+      - "1883:1883"
+  imagecapture:
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DISPLAY=$DISPLAY
+    build: 
+      context: ./image_capture
+      dockerfile: Dockerfile
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    devices:
+      - "/dev/video0:/dev/video0"
+    command: ["--privileged"]
+  faceprocessor:
+    environment:
+      - PYTHONUNBUFFERED=1
+    build: 
+      context: ./face_processor 
+      dockerfile: Dockerfile

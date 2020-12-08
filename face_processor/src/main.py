@@ -16,7 +16,7 @@ import config
 from utility import get_index_of_digit, get_face_encoding, save_model, load_model
 from model import train_test_splits, train_bmi_model, predict_bmi
 
-LOCAL_MQTT_HOST="processorbroker" 
+LOCAL_MQTT_HOST="imageprocessorbroker" 
 LOCAL_MQTT_PORT=1883
 LOCAL_MQTT_TOPIC="imagedetection/faceextractor"
 LOCAL_MQTT_RESULT_TOPIC="imagedetection/faceprocessor/result"
