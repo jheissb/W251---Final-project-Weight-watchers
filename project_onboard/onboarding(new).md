@@ -13,12 +13,15 @@ Topic:
 
 ## Image Capture & Processor
 There are 3 containers running on edge.  
-One container runs the GUI and acquire images from the webcam  
-One container would be the mosquitto broker that control the topic and communication to and from client  
-One container would consume the images from webcam and process and send over to the cloud
+One container runs the GUI and acquire images from the webcam. It then sends the images to the local processors, receive their results and then sends the information to the cloud for storage. It also dispalys historical data from the current subject.   
+Another container would be the mosquitto broker that control the topic and communication to and from client  
+The last local container runs the BMI predictor which receives images and returns BMI predicitons. 
+Finally the pose estimator runs directly on the Jetson device and receive messages with body images and returns keypoint locations and relevant ratios for obesity risk assesment.
+
+The images, ratios and BMI estimations are sent to the cloud where they are stored in S3 and all subject's data is returned to the GUI for display.
 
 ### Install the prerequests:
-Run the below command to install the prerequest:
+Run the below command to install the prerequisites:
 ```
 #if the file is unexcutable, run the below command first
 #chmod +x install_prerequest.sh 
