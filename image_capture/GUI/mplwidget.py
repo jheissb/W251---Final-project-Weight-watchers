@@ -8,5 +8,5 @@ class MplWidget(QWidget):
         self.canvas=FigureCanvas(Figure())
         vertical_layout=QVBoxLayout()
         vertical_layout.addWidget(self.canvas)
-        self.canvas.axes=self.canvas.figure.add_subplot(111,position = [0.1,0.2,0.85,0.75])#change to adjust for axis labels
+        self.canvas.axes=self.canvas.figure.add_subplot(111,position = [0.1,0.4,0.85,0.57])#change to adjust for axis labels
         self.setLayout(vertical_layout)

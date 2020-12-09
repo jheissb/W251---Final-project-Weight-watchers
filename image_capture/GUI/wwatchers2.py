@@ -70,9 +70,10 @@ class MyForm(QtWidgets.QMainWindow):
         self.ui.retake_body_picture_btn.clicked.connect(self.retake_body_picture)
         self.ui.submit_btn.clicked.connect(self.submit_data)
         self.ui.quit_btn.clicked.connect(self.quitf)
+        self.ui.quit_btn.clicked.connect(self.reset)
         self.face_size=self.ui.face.size()
         self.ui.text_output.setWordWrap(True) 
-        #self.ui.history_plot.canvas.axes.axis('off')
+        self.ui.history_plot.canvas.axes.axis('off')
 
         self.stream_face=True
         self.stream_body=False
@@ -89,15 +90,32 @@ class MyForm(QtWidgets.QMainWindow):
         self.client2.connect(REMOTE_MQTT_HOST, REMOTE_MQTT_PORT, 60)
         self.client2.on_message = self.on_message2
         self.BMI=0        
+        self.ssid=str(uuid.uuid4())
+        self.ui.label_7.setText(self.ssid)
+        self.ui.history_plot.canvas.axes.axis('on')
         self.client.loop_start()
         self.client2.loop_start()
-        
+        self.ui.history_plot.canvas.axes.axis('off')        
         # create a timer
         self.timer = QTimer()
         # set timer timeout callback function
         self.timer.timeout.connect(self.show_cam)
         # set control_bt callback clicked  function
         self.controlTimer()
+
+    def reset(self):
+        self.BMI=0        
+        self.ssid=str(uuid.uuid4())
+        self.ui.label_7.setText(self.ssid)
+        self.ui.label_3.clear()
+        self.ui.face.clear()
+        self.stream_face=True
+        self.stream_body=False
+        self.image_face=[]
+        self.image_body=[]
+        self.ui.history_plot.canvas.axes.axis('off')
+        self.ui.history_plot.canvas.draw()
+        QtWidgets.QApplication.processEvents() 
 
     def quitf(self):
         self.client.loop_stop()
@@ -164,7 +182,7 @@ class MyForm(QtWidgets.QMainWindow):
                 bmi_l.append(d['bmi'])
                 w2height_l.append(d['waist-height-ratio'])
                 w2hip_l.append(d['waist-hip-ratio'])
-            #self.ui.history_plot.canvas.axes.axis('on')
+            self.ui.history_plot.canvas.axes.axis('on')
             #ax2=self.ui.history_plot.canvas.axes.twinx()
             self.ui.history_plot.canvas.axes.plot(dates_l,bmi_l,'o-',label='BMI')         
             self.ui.history_plot.canvas.axes.plot(dates_l,10*np.array(w2height_l),'o-',label='10 x W2Height')
@@ -172,15 +190,7 @@ class MyForm(QtWidgets.QMainWindow):
             self.ui.history_plot.canvas.axes.set_xticklabels(dates_l,rotation=45)
             self.ui.history_plot.canvas.axes.legend()
             self.ui.history_plot.canvas.draw()
-            
-        #QtWidgets.QApplication.processEvents() 
-
-            
-            
-                
-                
-                
-            #self.client2.loop_stop()
+            self.ui.text_output.setText('Press Reset to continue or Quit')
        
     def process_body_results(self,msg):
         self.w2height_ratio=float(msg['waist-height-ratio'])
@@ -266,7 +276,7 @@ class MyForm(QtWidgets.QMainWindow):
         user_object['waist-hip-ratio'] = self.w2hip_ratio
         user_object['keypoints'] = self.keypoints
         user_object['body-img'] = png_body_as_text
-        user_object['session-id'] =str(uuid.uuid4())
+        user_object['session-id'] =self.ssid
         user_object['timestamp']=datetime.now().strftime("%m-%d-%Y-%H-%M-%S")
         payload=json.dumps(user_object, ensure_ascii=False, indent=4)
         self.client2.publish(REMOTE_MQTT_TOPIC, payload, qos=0, retain=False)
