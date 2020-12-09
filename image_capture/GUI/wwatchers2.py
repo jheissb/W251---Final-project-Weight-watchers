@@ -70,7 +70,7 @@ class MyForm(QtWidgets.QMainWindow):
         self.ui.retake_body_picture_btn.clicked.connect(self.retake_body_picture)
         self.ui.submit_btn.clicked.connect(self.submit_data)
         self.ui.quit_btn.clicked.connect(self.quitf)
-        self.ui.quit_btn.clicked.connect(self.reset)
+        self.ui.reset_btn.clicked.connect(self.resetb)
         self.face_size=self.ui.face.size()
         self.ui.text_output.setWordWrap(True) 
         self.ui.history_plot.canvas.axes.axis('off')
@@ -103,18 +103,25 @@ class MyForm(QtWidgets.QMainWindow):
         # set control_bt callback clicked  function
         self.controlTimer()
 
-    def reset(self):
+    def resetb(self):
+        print('Starting new session')
         self.BMI=0        
         self.ssid=str(uuid.uuid4())
-        self.ui.label_7.setText(self.ssid)
+        print(self.ssid)
         self.ui.label_3.clear()
         self.ui.face.clear()
         self.stream_face=True
         self.stream_body=False
         self.image_face=[]
         self.image_body=[]
+        self.ui.history_plot.canvas.axes.cla()
         self.ui.history_plot.canvas.axes.axis('off')
+        self.ui.history_plot.canvas.axes.plot(np.nan)
         self.ui.history_plot.canvas.draw()
+        self.ui.label_7.setText(self.ssid)
+        self.ui.bmi_tag.setText('BMI=')
+        self.ui.w2height_label.setText('Waist-to-height ratio:')
+        self.ui.w2hip_label.setText('Waist-to-hip ratio:')
         QtWidgets.QApplication.processEvents() 
 
     def quitf(self):
