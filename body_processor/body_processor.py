@@ -71,7 +71,7 @@ def calculate_ratio(img, keypoints):
     right_waist_points =(2*right_hip_points+right_shoulder_points)/3
     #avg_shoulder = np.linalg.norm(right_shoulder_points-left_shoulder_points)
     avg_hip = np.linalg.norm(right_hip_points-left_hip_points)
-    avg_waist = np.linalg.norm(right_hip_points-left_hip_points)
+    avg_waist = np.linalg.norm(right_waist_points-left_waist_points)
     waist_height_ratio = round((pi*avg_waist/avg_height),4)
     waist_hip_ratio = round((avg_waist/avg_hip),4)
     return (waist_height_ratio,waist_hip_ratio,list(left_eye_points),list(right_eye_points),list(left_ankle_points),
@@ -84,17 +84,19 @@ def process_message(message):
   buff = buff.reshape(1, -1)
   img = cv2.imdecode(buff, cv2.COLOR_BGR2RGB)
   orgimg, keypoints, processed_img = detect_pose(img)
-  if keypoints:
-    ratios_and_points  = calculate_ratio(orgimg, keypoints[0])
-  body_image = {}
-  #print('calculations:',ratios_and_points)
-  #_,png = cv2.imencode('.png', processed_img)
-  body_image['waist-hip-ratio'] = ratios_and_points[0]
-  body_image['waist-height-ratio'] = ratios_and_points[1]
-  body_image['keypoints'] = ratios_and_points[2:]
-  
-  #print('output:',body_image)
-  publish_result(json.dumps(body_image, cls=NpEncoder))
+  try:
+    if keypoints:
+      ratios_and_points  = calculate_ratio(orgimg, keypoints[0])
+    body_image = {}
+    #print('calculations:',ratios_and_points)
+    #_,png = cv2.imencode('.png', processed_img)
+    body_image['waist-hip-ratio'] = ratios_and_points[1]
+    body_image['waist-height-ratio'] = ratios_and_points[0]
+    body_image['keypoints'] = ratios_and_points[2:] 
+    #print('output:',body_image)
+    publish_result(json.dumps(body_image, cls=NpEncoder))
+  except:
+    print('Retake body image')
 
 mqttclient = mqtt.Client()
 mqttclient.on_connect = on_connect
